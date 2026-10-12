@@ -2,7 +2,9 @@ import type { CollectionConfig } from 'payload'
 
 export const Media: CollectionConfig = {
   slug: 'media',
-  upload: true,
+  upload: {
+    staticDir: process.env.VERCEL ? '/tmp/media' : './media',
+  },
   access: {
     read: () => true,
   },
