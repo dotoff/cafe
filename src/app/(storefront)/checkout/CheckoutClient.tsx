@@ -23,7 +23,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     deliveryDate: '',
     deliverySlot: 'asap',
     specialInstructions: '',
-    paymentMethod: 'upi_whatsapp',
+    paymentMethod: 'razorpay',
   })
 
   const subtotal = getTotal()
@@ -403,88 +403,39 @@ export default function CheckoutClient({ settings }: { settings: any }) {
               </div>
             </div>
 
-            {/* 3. Payment Method */}
+            {/* 3. Secure Payment */}
             <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm">
               <h2 className="text-xl font-serif text-brand-dark mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-brand-dark text-white text-xs flex items-center justify-center font-sans font-bold">3</span>
-                Payment Options
+                Payment Method
               </h2>
               
-              <div className="space-y-3">
-                {/* Option 1: Direct UPI / WhatsApp Pay */}
-                <label className={`block p-4 rounded-2xl border-2 cursor-pointer transition-all ${
-                  formData.paymentMethod === 'upi_whatsapp'
-                    ? 'border-brand-dark bg-brand-cream/30'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}>
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="upi_whatsapp"
-                      checked={formData.paymentMethod === 'upi_whatsapp'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand-dark focus:ring-brand-dark"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-gray-900 flex items-center gap-2">
-                          <Smartphone size={18} className="text-green-600" />
-                          UPI & WhatsApp Instant Order (Recommended)
-                        </span>
-                        <span className="text-xs bg-green-100 text-green-800 font-bold px-2 py-0.5 rounded-full">
-                          Fast & Free
-                        </span>
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">
-                        Pay via GPay, PhonePe, Paytm, or any UPI app. Instant confirmation with your Order ID on WhatsApp.
-                      </p>
-                    </div>
+              <div className="p-5 rounded-2xl border-2 border-brand-dark bg-brand-cream/30">
+                <div className="flex items-start gap-3.5">
+                  <div className="w-10 h-10 rounded-xl bg-brand-dark text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
+                    <CreditCard size={20} />
                   </div>
-                </label>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between flex-wrap gap-2">
+                      <span className="font-bold text-gray-900 text-sm md:text-base">
+                        Razorpay Instant & Secure Checkout
+                      </span>
+                      <span className="text-xs bg-emerald-100 text-emerald-800 font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                        <Lock size={11} /> 100% Secure
+                      </span>
+                    </div>
+                    <p className="text-xs text-gray-600 mt-1 leading-relaxed">
+                      Pay instantly with <strong>UPI (Google Pay, PhonePe, Paytm, CRED)</strong>, <strong>Debit & Credit Cards (Visa, Mastercard, RuPay)</strong>, or <strong>Netbanking</strong>.
+                    </p>
 
-                {/* Option 2: Razorpay Online Cards / Netbanking */}
-                <label className={`block p-4 rounded-2xl border-2 transition-all ${
-                  hasRazorpayKey 
-                    ? formData.paymentMethod === 'razorpay'
-                      ? 'border-brand-dark bg-brand-cream/30 cursor-pointer'
-                      : 'border-gray-200 hover:border-gray-300 cursor-pointer'
-                    : 'border-gray-200 bg-gray-50 opacity-80 cursor-not-allowed'
-                }`}>
-                  <div className="flex items-start gap-3">
-                    <input
-                      type="radio"
-                      name="paymentMethod"
-                      value="razorpay"
-                      disabled={!hasRazorpayKey}
-                      checked={formData.paymentMethod === 'razorpay'}
-                      onChange={handleChange}
-                      className="mt-1 text-brand-dark focus:ring-brand-dark"
-                    />
-                    <div className="flex-1">
-                      <div className="flex items-center justify-between">
-                        <span className="font-bold text-gray-900 flex items-center gap-2">
-                          <CreditCard size={18} className="text-blue-600" />
-                          Credit / Debit Cards & Netbanking (Razorpay)
-                        </span>
-                        {hasRazorpayKey ? (
-                          <span className="text-xs bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded-full">
-                            Online Gateway
-                          </span>
-                        ) : (
-                          <span className="text-xs bg-amber-100 text-amber-800 font-semibold px-2 py-0.5 rounded-full">
-                            Pending Merchant Live Keys
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-gray-600 mt-1">
-                        {hasRazorpayKey 
-                          ? 'Pay safely with Visa, Mastercard, RuPay, Amex, or Netbanking.' 
-                          : 'Online card gateway is undergoing Razorpay merchant verification. Please use UPI & WhatsApp Pay for instant ordering!'}
-                      </p>
+                    <div className="mt-3 pt-3 border-t border-brand-dark/10 flex flex-wrap items-center gap-2 text-xs font-semibold text-gray-700">
+                      <span className="bg-white px-2.5 py-1 rounded-lg border border-gray-200">⚡ Google Pay</span>
+                      <span className="bg-white px-2.5 py-1 rounded-lg border border-gray-200">📱 PhonePe</span>
+                      <span className="bg-white px-2.5 py-1 rounded-lg border border-gray-200">💳 Cards</span>
+                      <span className="bg-white px-2.5 py-1 rounded-lg border border-gray-200">🏦 Netbanking</span>
                     </div>
                   </div>
-                </label>
+                </div>
               </div>
             </div>
 
@@ -542,10 +493,10 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                 className="w-full bg-brand-dark hover:bg-brand-medium text-white py-4 rounded-2xl font-bold shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {loading ? (
-                  <span>Securing Order...</span>
+                  <span>Opening Razorpay Gateway...</span>
                 ) : (
                   <>
-                    <CheckCircle size={20} /> Place Order & Pay ₹{total}
+                    <CheckCircle size={20} /> Pay ₹{total} via UPI / Card
                   </>
                 )}
               </button>

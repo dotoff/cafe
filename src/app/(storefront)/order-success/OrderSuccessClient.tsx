@@ -20,22 +20,31 @@ export default function OrderSuccessClient({ order, settings }: { order: any; se
   const slotName = order.deliverySlot ? (slotLabels[order.deliverySlot] || order.deliverySlot) : 'Standard'
   const formattedDate = order.deliveryDate ? new Date(order.deliveryDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : null
 
+  const isPaid = order.paymentStatus === 'paid_razorpay' || order.paymentStatus === 'paid_upi' || order.paymentMethod === 'razorpay'
+
   // Pre-fill WhatsApp message
-  let waMessage = `*Order Confirmation - ${storeName}*%0A%0A`
+  let waMessage = `*Order Update - ${storeName}*%0A%0A`
   waMessage += `*Order ID:* ${order.orderNumber}%0A`
+  if (isPaid) {
+    waMessage += `*Payment:* ✅ Paid (₹${order.total} via Razorpay)%0A`
+    if (order.razorpayPaymentId) waMessage += `*Payment Ref:* ${order.razorpayPaymentId}%0A`
+  } else {
+    waMessage += `*Total Amount:* ₹${order.total}%0A`
+    waMessage += `*Payment Status:* Pending Payment%0A`
+  }
   waMessage += `*Name:* ${order.customerName}%0A`
   waMessage += `*Phone:* ${order.customerPhone}%0A`
   waMessage += `*Address:* ${order.deliveryAddress}, ${order.pincode}%0A`
   if (formattedDate) waMessage += `*Preferred Date:* ${formattedDate}%0A`
   if (order.deliverySlot) waMessage += `*Preferred Slot:* ${slotName}%0A`
-  if (order.specialInstructions) waMessage += `*Notes:* ${order.specialInstructions}%0A`
-  waMessage += `%0A*Total Amount:* ₹${order.total}%0A`
-  waMessage += `*Payment Method:* ${order.paymentMethod === 'razorpay' ? 'Razorpay Online' : 'UPI / WhatsApp Pay'}%0A%0A`
-  waMessage += `Please confirm my order and share updates! 🙏`
+  if (order.specialInstructions) waMessage += `*Notes:* ${order.specialInstructions}%0A%0A`
+  waMessage += isPaid 
+    ? `Hello! I have completed payment for my order. Looking forward to fresh baked goodies! 🙏`
+    : `Please confirm my order and share updates! 🙏`
 
   const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${waMessage}`
 
-  // Standard UPI URI
+  // Standard UPI URI (Only used if payment is pending)
   const upiPaymentUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(storeName)}&am=${order.total}&cu=INR&tn=${encodeURIComponent(`Order ${order.orderNumber}`)}`
   const qrCodeUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(upiPaymentUri)}`
 
@@ -51,77 +60,121 @@ export default function OrderSuccessClient({ order, settings }: { order: any; se
         
         {/* Success Header (Hidden when printing packing slip) */}
         <div className="bg-white rounded-3xl p-8 md:p-10 shadow-sm text-center mb-8 border border-green-100 print:hidden">
-          <div className="w-20 h-20 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
+          <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
             <CheckCircle2 size={44} />
           </div>
-          <span className="text-xs font-bold tracking-widest text-green-700 uppercase bg-green-50 px-3 py-1 rounded-full">
-            Order Received
+          <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase bg-emerald-50 px-3 py-1 rounded-full">
+            {isPaid ? '🎉 Payment Successful & Verified' : 'Order Received'}
           </span>
           <h1 className="text-3xl md:text-4xl font-serif text-brand-dark mt-3 mb-2">
             Thank you, {order.customerName}!
           </h1>
           <p className="text-gray-600 text-sm max-w-md mx-auto">
-            Your order has been recorded into our bakery queue. Order Number:
+            {isPaid
+              ? 'Your payment has been received via Razorpay and your order is confirmed with our bakery!'
+              : 'Your order has been recorded into our bakery queue. Order Number:'}
           </p>
-          <div className="inline-block mt-3 bg-brand-cream px-5 py-2 rounded-2xl border border-brand-dark/20 text-brand-dark font-mono font-bold text-lg">
-            #{order.orderNumber}
+          <div className="inline-flex items-center gap-2 mt-4 bg-brand-cream px-5 py-2.5 rounded-2xl border border-brand-dark/20 text-brand-dark font-mono font-bold text-lg">
+            <span>#{order.orderNumber}</span>
           </div>
+          {order.razorpayPaymentId && (
+            <p className="text-xs text-gray-500 mt-2 font-mono">
+              Razorpay Ref: <span className="text-gray-700 font-semibold">{order.razorpayPaymentId}</span>
+            </p>
+          )}
         </div>
 
-        {/* Payment & Confirmation Next Steps (Hidden when printing packing slip) */}
-        <div className="bg-gradient-to-br from-white to-green-50/50 rounded-3xl p-8 shadow-sm mb-8 border border-green-200 print:hidden">
-          <h2 className="text-xl font-serif text-brand-dark mb-2 flex items-center gap-2">
-            <span>✨</span> Next Step: Pay & Confirm on WhatsApp
-          </h2>
-          <p className="text-gray-600 text-sm mb-6">
-            To start baking your order immediately, pay <strong>₹{order.total}</strong> via UPI and click the button below to confirm with our kitchen team.
-          </p>
+        {/* 1. Paid via Razorpay: Show Kitchen Preparation & WhatsApp Chat (NO extra payment requests) */}
+        {isPaid ? (
+          <div className="bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-8 shadow-sm mb-8 border border-emerald-200 print:hidden">
+            <h2 className="text-xl font-serif text-brand-dark mb-2 flex items-center gap-2">
+              <span>🧁</span> Order Confirmed & In The Kitchen
+            </h2>
+            <p className="text-gray-600 text-sm mb-6 leading-relaxed">
+              We received your payment of <strong className="text-emerald-700 font-bold">₹{order.total}</strong> via Razorpay. Our bakery team is preparing your goodies fresh to order.
+            </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white p-6 rounded-2xl border border-gray-100 mb-6">
-            {/* Left: UPI details */}
-            <div>
-              <p className="text-xs uppercase font-bold text-gray-400 mb-1">Scan or Pay via any UPI App</p>
-              <p className="text-sm font-semibold text-gray-800 mb-3">Google Pay • PhonePe • Paytm • BHIM</p>
-              
-              <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-2 mb-3">
-                <span className="font-mono text-sm text-gray-800 truncate">{upiId}</span>
-                <button
-                  onClick={copyUpi}
-                  className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-lg font-medium flex items-center gap-1 shrink-0 hover:bg-brand-medium transition-colors"
-                >
-                  {copied ? <Check size={14} /> : <Copy size={14} />}
-                  {copied ? 'Copied!' : 'Copy UPI'}
-                </button>
+            {/* Visual Order Progress Bar */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 bg-white p-4 rounded-2xl border border-emerald-100 mb-6 text-center text-xs">
+              <div className="p-3 bg-emerald-50 rounded-xl border border-emerald-200/60">
+                <span className="font-bold text-emerald-800 block text-sm">✅ Payment Verified</span>
+                <span className="text-emerald-600 font-medium">₹{order.total} Paid via Razorpay</span>
+              </div>
+              <div className="p-3 bg-amber-50 rounded-xl border border-amber-200/60">
+                <span className="font-bold text-amber-800 block text-sm">🧁 Freshly Baking</span>
+                <span className="text-amber-700 font-medium">Sent to Flavourite Kitchen</span>
+              </div>
+              <div className="p-3 bg-blue-50 rounded-xl border border-blue-200/60">
+                <span className="font-bold text-blue-800 block text-sm">🛵 Out For Delivery</span>
+                <span className="text-blue-700 font-medium">{slotName}</span>
+              </div>
+            </div>
+
+            {/* WhatsApp Link to Stay in Touch */}
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-md text-center"
+            >
+              <MessageCircle size={22} />
+              <span>Message Bakery on WhatsApp for Updates</span>
+              <ArrowRight size={18} />
+            </a>
+          </div>
+        ) : (
+          /* 2. Pending Payment fallback (Only if ever accessed unpaid) */
+          <div className="bg-gradient-to-br from-white to-green-50/50 rounded-3xl p-8 shadow-sm mb-8 border border-green-200 print:hidden">
+            <h2 className="text-xl font-serif text-brand-dark mb-2 flex items-center gap-2">
+              <span>✨</span> Next Step: Pay & Confirm on WhatsApp
+            </h2>
+            <p className="text-gray-600 text-sm mb-6">
+              To start baking your order immediately, pay <strong>₹{order.total}</strong> via UPI and click the button below to confirm with our kitchen team.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center bg-white p-6 rounded-2xl border border-gray-100 mb-6">
+              <div>
+                <p className="text-xs uppercase font-bold text-gray-400 mb-1">Scan or Pay via any UPI App</p>
+                <p className="text-sm font-semibold text-gray-800 mb-3">Google Pay • PhonePe • Paytm • BHIM</p>
+                
+                <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 flex items-center justify-between gap-2 mb-3">
+                  <span className="font-mono text-sm text-gray-800 truncate">{upiId}</span>
+                  <button
+                    onClick={copyUpi}
+                    className="bg-brand-dark text-white text-xs px-3 py-1.5 rounded-lg font-medium flex items-center gap-1 shrink-0 hover:bg-brand-medium transition-colors"
+                  >
+                    {copied ? <Check size={14} /> : <Copy size={14} />}
+                    {copied ? 'Copied!' : 'Copy UPI'}
+                  </button>
+                </div>
+
+                <p className="text-xs text-gray-500 leading-relaxed">
+                  Total to Pay: <strong className="text-brand-dark text-sm">₹{order.total}</strong>
+                </p>
               </div>
 
-              <p className="text-xs text-gray-500 leading-relaxed">
-                Total to Pay: <strong className="text-brand-dark text-sm">₹{order.total}</strong>
-              </p>
+              <div className="flex flex-col items-center justify-center p-3 bg-brand-cream/40 rounded-xl border border-brand-cream">
+                <img
+                  src={qrCodeUrl}
+                  alt="UPI Payment QR Code"
+                  className="w-40 h-40 rounded-lg shadow-sm border border-white"
+                />
+                <span className="text-[11px] text-gray-500 mt-2 font-medium">Scan with your phone to pay</span>
+              </div>
             </div>
 
-            {/* Right: QR Code */}
-            <div className="flex flex-col items-center justify-center p-3 bg-brand-cream/40 rounded-xl border border-brand-cream">
-              <img
-                src={qrCodeUrl}
-                alt="UPI Payment QR Code"
-                className="w-40 h-40 rounded-lg shadow-sm border border-white"
-              />
-              <span className="text-[11px] text-gray-500 mt-2 font-medium">Scan with your phone to pay</span>
-            </div>
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg text-center"
+            >
+              <MessageCircle size={22} />
+              <span>Confirm Order on WhatsApp</span>
+              <ArrowRight size={18} />
+            </a>
           </div>
-
-          {/* Primary WhatsApp Action */}
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full bg-green-600 hover:bg-green-700 text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-lg text-center"
-          >
-            <MessageCircle size={22} />
-            <span>Confirm Order on WhatsApp</span>
-            <ArrowRight size={18} />
-          </a>
-        </div>
+        )}
 
         {/* Order Receipt Details */}
         <div className="bg-white rounded-3xl p-8 shadow-sm print:shadow-none print:p-0 print:border-none">
