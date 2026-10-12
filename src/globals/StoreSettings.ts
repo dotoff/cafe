@@ -47,6 +47,11 @@ export const StoreSettings: GlobalConfig = {
               type: 'text',
               admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...). Once approved by Razorpay, paste it here to activate online card/netbanking payments.' }
             },
+            {
+              name: 'razorpayKeySecret',
+              type: 'text',
+              admin: { description: 'Razorpay Key Secret (found in Razorpay Dashboard -> Settings -> API Keys). Keep this confidential.' }
+            },
             { 
               name: 'taxRate', 
               type: 'number', 
