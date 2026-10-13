@@ -11,6 +11,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
   const { items, getTotal, clearCart } = useCartStore()
 
   const [loading, setLoading] = useState(false)
+  const [redirecting, setRedirecting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState({
@@ -113,6 +114,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
         handler: async function (response: any) {
           try {
             setLoading(true)
+            setRedirecting(true)
             const verifyRes = await fetch('/api/razorpay/verify-payment', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -136,9 +138,18 @@ export default function CheckoutClient({ settings }: { settings: any }) {
               throw new Error(verifyData.error || 'Payment signature verification failed')
             }
 
+            if (typeof window !== 'undefined' && verifyData.order) {
+              try {
+                sessionStorage.setItem('flavourite_last_order', JSON.stringify(verifyData.order))
+              } catch (e) {
+                // Ignore sessionStorage errors
+              }
+            }
+
             clearCart()
             router.push(`/order-success?orderId=${encodeURIComponent(verifyData.orderNumber)}`)
           } catch (verifyErr: any) {
+            setRedirecting(false)
             setError(verifyErr?.message || 'Payment verification failed. Please contact support.')
             setLoading(false)
           }
@@ -173,6 +184,22 @@ export default function CheckoutClient({ settings }: { settings: any }) {
       setError(err?.message || 'Something went wrong. Please try again.')
       setLoading(false)
     }
+  }
+
+  if (redirecting) {
+    return (
+      <div className="bg-brand-cream min-h-screen py-20 px-4 flex items-center justify-center">
+        <div className="max-w-md w-full bg-white rounded-3xl p-10 text-center shadow-sm border border-emerald-100">
+          <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
+            ✓
+          </div>
+          <h2 className="text-2xl font-serif text-brand-dark mb-2">Payment Verified!</h2>
+          <p className="text-gray-600 text-sm">
+            Confirming your order and generating your official receipt...
+          </p>
+        </div>
+      </div>
+    )
   }
 
   if (items.length === 0) {
@@ -488,6 +515,12 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                   <span className="text-2xl font-serif font-bold text-brand-dark">₹{total}</span>
                 </div>
               </div>
+
+              {error && (
+                <div className="mb-4 bg-red-50 border border-red-200 text-red-700 px-3.5 py-2.5 rounded-xl text-xs font-medium">
+                  ⚠️ {error}
+                </div>
+              )}
 
               {/* Submit CTA */}
               <button

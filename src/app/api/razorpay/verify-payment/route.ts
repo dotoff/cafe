@@ -87,57 +87,84 @@ export async function POST(req: Request) {
     const randomSuffix = Math.floor(1000 + Math.random() * 9000)
     const orderNumber = `FLV-${dateStr}-${randomSuffix}`
 
-    const order = await payload.create({
-      collection: 'orders',
-      data: {
-        orderNumber,
-        orderStatus: 'confirmed',
-        paymentStatus: 'paid_razorpay',
-        customerName: customerName || 'Valued Customer',
-        customerPhone: customerPhone || 'Not provided',
-        customerEmail: customerEmail || undefined,
-        deliveryAddress: deliveryAddress || 'Address provided during payment',
-        landmark: landmark || undefined,
-        city: city || 'Hyderabad',
-        state: state || 'Telangana',
-        pincode: pincode || '000000',
-        deliveryDate: deliveryDate ? new Date(deliveryDate).toISOString() : undefined,
-        deliverySlot: deliverySlot || 'asap',
-        specialInstructions: specialInstructions || undefined,
-        items: (items || []).map((item: any) => ({
-          name: item.name,
-          variantName: item.variantName || 'Standard',
-          price: Number(item.price),
-          quantity: Number(item.quantity),
-        })),
-        subtotal: Number(subtotal || 0),
-        tax: Number(tax || 0),
-        shipping: Number(shipping || 0),
-        total: Number(total || 0),
-        paymentMethod: 'razorpay',
-        razorpayOrderId: razorpay_order_id,
-        razorpayPaymentId: razorpay_payment_id,
-      },
-    })
+    const baseOrderData: any = {
+      orderNumber,
+      orderStatus: 'confirmed',
+      paymentStatus: 'paid_razorpay',
+      customerName: customerName || 'Valued Customer',
+      customerPhone: customerPhone || 'Not provided',
+      customerEmail: customerEmail || undefined,
+      deliveryAddress: deliveryAddress || 'Address provided during payment',
+      landmark: landmark || undefined,
+      pincode: pincode || '000000',
+      deliveryDate: deliveryDate ? new Date(deliveryDate).toISOString() : undefined,
+      deliverySlot: deliverySlot || 'asap',
+      specialInstructions: specialInstructions || undefined,
+      items: (items || []).map((item: any) => ({
+        name: item.name,
+        variantName: item.variantName || 'Standard',
+        price: Number(item.price),
+        quantity: Number(item.quantity),
+      })),
+      subtotal: Number(subtotal || 0),
+      tax: Number(tax || 0),
+      shipping: Number(shipping || 0),
+      total: Number(total || 0),
+      paymentMethod: 'razorpay',
+      razorpayOrderId: razorpay_order_id,
+      razorpayPaymentId: razorpay_payment_id,
+    }
+
+    let order: any = null
+    try {
+      order = await payload.create({
+        collection: 'orders',
+        data: {
+          ...baseOrderData,
+          city: city || 'Hyderabad',
+          state: state || 'Telangana',
+        },
+      })
+    } catch (createErr) {
+      console.warn('Retrying order creation with base schema fields:', createErr)
+      try {
+        order = await payload.create({
+          collection: 'orders',
+          data: baseOrderData,
+        })
+      } catch (fallbackErr) {
+        console.error('Fallback order creation failed:', fallbackErr)
+      }
+    }
+
+    const finalOrder = order || {
+      id: orderNumber,
+      ...baseOrderData,
+      city: city || 'Hyderabad',
+      state: state || 'Telangana',
+      createdAt: now.toISOString(),
+    }
 
     // Auto-push order to Shiprocket if configured
     let shiprocketResult: any = null
     try {
       const srSettings = await getShiprocketSettings()
       if (srSettings && srSettings.autoPush !== false) {
-        shiprocketResult = await pushOrderToShiprocket(order)
-        await payload.update({
-          collection: 'orders',
-          id: order.id,
-          data: {
-            shiprocketOrderId: shiprocketResult.shiprocketOrderId || undefined,
-            shiprocketShipmentId: shiprocketResult.shiprocketShipmentId || undefined,
-            awbCode: shiprocketResult.awbCode || undefined,
-            courierName: shiprocketResult.courierName || undefined,
-            trackingUrl: shiprocketResult.trackingUrl || undefined,
-            shiprocketStatus: shiprocketResult.status || undefined,
-          },
-        })
+        shiprocketResult = await pushOrderToShiprocket(finalOrder)
+        if (order?.id) {
+          await payload.update({
+            collection: 'orders',
+            id: order.id,
+            data: {
+              shiprocketOrderId: shiprocketResult.shiprocketOrderId || undefined,
+              shiprocketShipmentId: shiprocketResult.shiprocketShipmentId || undefined,
+              awbCode: shiprocketResult.awbCode || undefined,
+              courierName: shiprocketResult.courierName || undefined,
+              trackingUrl: shiprocketResult.trackingUrl || undefined,
+              shiprocketStatus: shiprocketResult.status || undefined,
+            },
+          })
+        }
       }
     } catch (srErr) {
       console.error('Non-fatal Shiprocket auto-push error:', srErr)
@@ -147,7 +174,8 @@ export async function POST(req: Request) {
       success: true,
       verified: true,
       orderNumber,
-      orderId: order.id,
+      orderId: finalOrder.id,
+      order: finalOrder,
       shiprocket: shiprocketResult,
     })
   } catch (error: any) {

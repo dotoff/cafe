@@ -1,12 +1,63 @@
 'use client'
 
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { CheckCircle2, Receipt, ArrowRight, PackageCheck } from 'lucide-react'
 
-export default function OrderSuccessClient({ order, settings }: { order: any; settings: any }) {
+export default function OrderSuccessClient({
+  order: initialOrder,
+  orderNumber,
+  settings,
+}: {
+  order: any
+  orderNumber?: string
+  settings: any
+}) {
+  const [order, setOrder] = useState<any>(initialOrder)
+
+  useEffect(() => {
+    if (!order && typeof window !== 'undefined') {
+      try {
+        const saved = sessionStorage.getItem('flavourite_last_order')
+        if (saved) {
+          const parsed = JSON.parse(saved)
+          if (!orderNumber || parsed.orderNumber === orderNumber) {
+            setOrder(parsed)
+          }
+        }
+      } catch (e) {
+        // Ignore sessionStorage errors
+      }
+    }
+  }, [order, orderNumber])
+
   const whatsappNumber = settings?.whatsappNumber || '917013205977'
   const storeName = settings?.storeName || 'Flavourite'
+
+  if (!order) {
+    return (
+      <div className="bg-brand-cream min-h-screen py-20 px-4">
+        <div className="max-w-md mx-auto bg-white rounded-3xl p-10 text-center shadow-sm">
+          <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
+            ✓
+          </div>
+          <h1 className="text-2xl font-serif text-brand-dark mb-2">Order Confirmed!</h1>
+          {orderNumber && (
+            <p className="font-mono font-bold text-brand-dark mb-2">#{orderNumber}</p>
+          )}
+          <p className="text-gray-600 text-sm mb-6">
+            Thank you for shopping with Flavourite. Your payment was verified and we are preparing your order!
+          </p>
+          <Link
+            href="/shop"
+            className="inline-block bg-brand-dark text-white px-8 py-3 rounded-full font-semibold hover:bg-brand-medium transition-colors"
+          >
+            Continue Shopping
+          </Link>
+        </div>
+      </div>
+    )
+  }
 
   const slotLabels: Record<string, string> = {
     morning: 'Morning (10:00 AM - 1:00 PM)',

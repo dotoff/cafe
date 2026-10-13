@@ -55,6 +55,7 @@ export default buildConfig({
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
   db: sqliteAdapter({
+    push: true,
     client: {
       url: databaseUrl,
       authToken: process.env.DATABASE_AUTH_TOKEN,
