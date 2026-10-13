@@ -13,20 +13,20 @@ export default function ContactPage() {
       <div className="max-w-6xl mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
           
-          <div className="bg-white p-10 rounded-3xl shadow-sm">
+          <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 p-10 rounded-3xl shadow-sm">
             <h2 className="text-2xl font-serif text-brand-dark mb-6">Send a Message</h2>
             <form className="space-y-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
-                <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark outline-none transition-colors" placeholder="Your name" />
+                <input type="text" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark outline-none transition-colors" placeholder="Your name" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
-                <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark outline-none transition-colors" placeholder="your@email.com" />
+                <input type="email" className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark outline-none transition-colors" placeholder="your@email.com" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
-                <textarea rows={4} className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark outline-none transition-colors resize-none" placeholder="How can we help you?"></textarea>
+                <textarea rows={4} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark outline-none transition-colors resize-none" placeholder="How can we help you?"></textarea>
               </div>
               <button type="button" className="w-full bg-brand-dark text-white font-bold py-4 rounded-xl hover:bg-brand-medium transition-colors">
                 Send Message
@@ -43,7 +43,7 @@ export default function ContactPage() {
             </div>
             
             <div className="space-y-6">
-              <div className="flex items-start gap-4 bg-white p-6 rounded-2xl shadow-sm">
+              <div className="flex items-start gap-4 bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-6 rounded-2xl shadow-sm">
                 <div className="text-3xl">📍</div>
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">Visit Us</h4>
@@ -51,7 +51,7 @@ export default function ContactPage() {
                 </div>
               </div>
               
-              <div className="flex items-start gap-4 bg-white p-6 rounded-2xl shadow-sm">
+              <div className="flex items-start gap-4 bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-6 rounded-2xl shadow-sm">
                 <div className="text-3xl">📞</div>
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">Call / WhatsApp</h4>
@@ -59,7 +59,7 @@ export default function ContactPage() {
                 </div>
               </div>
               
-              <div className="flex items-start gap-4 bg-white p-6 rounded-2xl shadow-sm">
+              <div className="flex items-start gap-4 bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-6 rounded-2xl shadow-sm">
                 <div className="text-3xl">✉️</div>
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">Email Us</h4>

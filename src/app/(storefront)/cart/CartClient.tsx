@@ -19,8 +19,8 @@ export default function CartClient({ settings }: { settings: any }) {
   if (items.length === 0) {
     return (
       <div className="bg-brand-cream min-h-screen py-20 px-4">
-        <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-sm p-12 text-center">
-          <ShoppingBag size={64} className="mx-auto text-gray-300 mb-6" />
+        <div className="max-w-2xl mx-auto bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl shadow-sm p-12 text-center">
+          <ShoppingBag size={64} className="mx-auto text-emerald-700/40 mb-6" />
           <h2 className="text-2xl font-serif text-brand-dark mb-4">Your cart is empty</h2>
           <p className="text-gray-500 mb-8">Looks like you haven't added any sweet treats yet.</p>
           <Link 
@@ -42,7 +42,7 @@ export default function CartClient({ settings }: { settings: any }) {
         <div className="flex flex-col lg:flex-row gap-8">
           
           <div className="flex-grow">
-            <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl shadow-sm overflow-hidden">
               <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-brand-dark text-white text-sm font-semibold">
                 <div className="col-span-6">Product</div>
                 <div className="col-span-2 text-center">Price</div>
@@ -50,12 +50,12 @@ export default function CartClient({ settings }: { settings: any }) {
                 <div className="col-span-2 text-right pr-4">Total</div>
               </div>
               
-              <div className="divide-y divide-gray-100">
+              <div className="divide-y divide-emerald-100/80">
                 {items.map((item) => (
                   <div key={item.id} className="grid grid-cols-1 md:grid-cols-12 gap-4 p-6 items-center">
                     
                     <div className="col-span-1 md:col-span-6 flex items-center gap-4">
-                      <div className="w-20 h-20 bg-brand-cream rounded-xl flex items-center justify-center text-3xl overflow-hidden shrink-0">
+                      <div className="w-20 h-20 bg-brand-cream rounded-xl flex items-center justify-center text-3xl overflow-hidden shrink-0 border border-emerald-100">
                         {item.image && typeof item.image === 'object' && item.image.url ? (
                            <img src={item.image.url} alt={item.name} className="w-full h-full object-cover" />
                         ) : '🍫'}
@@ -73,7 +73,7 @@ export default function CartClient({ settings }: { settings: any }) {
                     </div>
                     
                     <div className="col-span-1 md:col-span-2 flex md:justify-center">
-                      <div className="flex items-center border border-gray-200 rounded-lg">
+                      <div className="flex items-center border border-gray-200 bg-white rounded-lg">
                         <button 
                           onClick={() => {
                             if (item.quantity > 1) {
@@ -115,8 +115,8 @@ export default function CartClient({ settings }: { settings: any }) {
           </div>
           
           <div className="w-full lg:w-96 shrink-0">
-            <div className="bg-white rounded-2xl shadow-sm p-8 sticky top-24">
-              <h3 className="text-xl font-serif text-brand-dark mb-6 pb-4 border-b">Order Summary</h3>
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl shadow-sm p-8 sticky top-24">
+              <h3 className="text-xl font-serif text-brand-dark mb-6 pb-4 border-b border-emerald-200/60">Order Summary</h3>
               
               <div className="space-y-4 mb-6">
                 <div className="flex justify-between text-gray-600">
@@ -138,7 +138,7 @@ export default function CartClient({ settings }: { settings: any }) {
                 )}
               </div>
               
-              <div className="border-t pt-4 mb-8">
+              <div className="border-t border-emerald-200/60 pt-4 mb-8">
                 <div className="flex justify-between items-center">
                   <span className="font-semibold text-lg">Total</span>
                   <span className="text-2xl font-bold text-brand-dark">₹{total}</span>

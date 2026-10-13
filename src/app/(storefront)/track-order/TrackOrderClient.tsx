@@ -73,7 +73,7 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
         </div>
 
         {/* Search Bar */}
-        <div className="bg-white p-4 rounded-3xl shadow-sm mb-8 border border-gray-100">
+        <div className="bg-gradient-to-br from-white to-emerald-50/50 p-4 rounded-3xl shadow-sm mb-8 border border-emerald-200">
           <form
             onSubmit={(e) => {
               e.preventDefault()
@@ -88,7 +88,7 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Order Number (FLV-...) or Mobile Number"
-                className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                className="w-full pl-11 pr-4 py-3.5 rounded-2xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
               />
             </div>
             <button
@@ -111,9 +111,9 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
 
         {/* Results Card */}
         {order && (
-          <div className="bg-white rounded-3xl p-6 md:p-8 shadow-sm border border-gray-100 animate-in fade-in duration-300">
+          <div className="bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-6 md:p-8 shadow-sm border border-emerald-200 animate-in fade-in duration-300">
             
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-6 border-b border-gray-100">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-6 border-b border-emerald-200/60">
               <div>
                 <span className="text-xs text-gray-400 font-semibold uppercase tracking-wider">Order ID</span>
                 <h3 className="text-xl font-bold text-gray-900 font-mono">#{order.orderNumber}</h3>
@@ -122,8 +122,14 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="px-3 py-1 bg-amber-50 text-amber-800 rounded-full text-xs font-bold capitalize">
-                  {order.orderStatus === 'preparing' ? '🧁 Baking in Kitchen' : order.orderStatus}
+                <span className="px-3 py-1 bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-full text-xs font-bold capitalize">
+                  {order.orderStatus === 'preparing'
+                    ? '🧁 Baking in Kitchen'
+                    : order.orderStatus === 'confirmed'
+                    ? '✓ Order Confirmed'
+                    : order.orderStatus === 'out_for_delivery'
+                    ? '🛵 Out for Delivery'
+                    : order.orderStatus}
                 </span>
               </div>
             </div>

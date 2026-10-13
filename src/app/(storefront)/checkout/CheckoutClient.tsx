@@ -189,7 +189,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
   if (redirecting) {
     return (
       <div className="bg-brand-cream min-h-screen py-20 px-4 flex items-center justify-center">
-        <div className="max-w-md w-full bg-white rounded-3xl p-10 text-center shadow-sm border border-emerald-100">
+        <div className="max-w-md w-full bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-10 text-center shadow-sm border border-emerald-200">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl animate-bounce">
             ✓
           </div>
@@ -205,8 +205,8 @@ export default function CheckoutClient({ settings }: { settings: any }) {
   if (items.length === 0) {
     return (
       <div className="bg-brand-cream min-h-screen py-20 px-4">
-        <div className="max-w-md mx-auto bg-white rounded-3xl p-10 text-center shadow-sm">
-          <ShoppingBag size={56} className="mx-auto text-gray-300 mb-4" />
+        <div className="max-w-md mx-auto bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl p-10 text-center shadow-sm">
+          <ShoppingBag size={56} className="mx-auto text-emerald-700/40 mb-4" />
           <h2 className="text-2xl font-serif text-brand-dark mb-2">Your Cart is Empty</h2>
           <p className="text-gray-500 text-sm mb-6">Add delicious freshly baked goodies before checking out.</p>
           <Link
@@ -227,8 +227,8 @@ export default function CheckoutClient({ settings }: { settings: any }) {
           <Link href="/cart" className="inline-flex items-center gap-2 text-brand-dark hover:underline font-medium text-sm">
             <ArrowLeft size={16} /> Back to Cart
           </Link>
-          <div className="flex items-center gap-2 text-xs font-semibold text-gray-500 bg-white px-3 py-1.5 rounded-full border border-gray-200">
-            <Lock size={12} className="text-green-600" /> 256-bit Secure Checkout
+          <div className="flex items-center gap-2 text-xs font-semibold text-gray-600 bg-gradient-to-br from-white to-emerald-50/50 px-3 py-1.5 rounded-full border border-emerald-200">
+            <Lock size={12} className="text-emerald-600" /> 256-bit Secure Checkout
           </div>
         </div>
 
@@ -245,7 +245,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
           <div className="lg:col-span-7 space-y-6">
             
             {/* 1. Contact Information */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm">
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 p-6 md:p-8 rounded-3xl shadow-sm">
               <h2 className="text-xl font-serif text-brand-dark mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-brand-dark text-white text-xs flex items-center justify-center font-sans font-bold">1</span>
                 Contact Information
@@ -262,7 +262,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                     value={formData.customerName}
                     onChange={handleChange}
                     placeholder="e.g. Priya Sharma"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                   />
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -281,7 +281,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                         value={formData.customerPhone}
                         onChange={handleChange}
                         placeholder="9876543210"
-                        className="w-full px-4 py-3 rounded-r-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                        className="w-full px-4 py-3 rounded-r-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                       />
                     </div>
                   </div>
@@ -295,7 +295,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.customerEmail}
                       onChange={handleChange}
                       placeholder="priya@example.com"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -303,7 +303,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
             </div>
 
             {/* 2. Delivery Address */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm">
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 p-6 md:p-8 rounded-3xl shadow-sm">
               <h2 className="text-xl font-serif text-brand-dark mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-brand-dark text-white text-xs flex items-center justify-center font-sans font-bold">2</span>
                 Delivery Address
@@ -320,7 +320,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                     value={formData.deliveryAddress}
                     onChange={handleChange}
                     placeholder="Flat 402, Sunshine Heights, Road No. 12, Banjara Hills"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm resize-none"
                   ></textarea>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -334,7 +334,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.landmark}
                       onChange={handleChange}
                       placeholder="Near City Center Mall"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
                   <div>
@@ -349,7 +349,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.pincode}
                       onChange={handleChange}
                       placeholder="500034"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -366,7 +366,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.city}
                       onChange={handleChange}
                       placeholder="Hyderabad"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
                   <div>
@@ -380,7 +380,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.state}
                       onChange={handleChange}
                       placeholder="Telangana"
-                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
                 </div>
@@ -427,20 +427,20 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                     value={formData.specialInstructions}
                     onChange={handleChange}
                     placeholder="e.g. 100% Eggless only, Please write 'Happy Birthday Rohit' on cake, Call before arrival"
-                    className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm resize-none"
+                    className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-white focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm resize-none"
                   ></textarea>
                 </div>
               </div>
             </div>
 
             {/* 3. Secure Payment */}
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm">
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 p-6 md:p-8 rounded-3xl shadow-sm">
               <h2 className="text-xl font-serif text-brand-dark mb-4 flex items-center gap-2">
                 <span className="w-6 h-6 rounded-full bg-brand-dark text-white text-xs flex items-center justify-center font-sans font-bold">3</span>
                 Payment Method
               </h2>
               
-              <div className="p-5 rounded-2xl border-2 border-brand-dark bg-brand-cream/30">
+              <div className="p-5 rounded-2xl border-2 border-brand-dark bg-white/80">
                 <div className="flex items-start gap-3.5">
                   <div className="w-10 h-10 rounded-xl bg-brand-dark text-white flex items-center justify-center shrink-0 mt-0.5 shadow-sm">
                     <CreditCard size={20} />
@@ -473,8 +473,8 @@ export default function CheckoutClient({ settings }: { settings: any }) {
 
           {/* Right Column: Order Summary */}
           <div className="lg:col-span-5">
-            <div className="bg-white p-6 md:p-8 rounded-3xl shadow-sm sticky top-24">
-              <h2 className="text-xl font-serif text-brand-dark mb-4 pb-3 border-b border-gray-100">
+            <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 p-6 md:p-8 rounded-3xl shadow-sm sticky top-24">
+              <h2 className="text-xl font-serif text-brand-dark mb-4 pb-3 border-b border-emerald-200/60">
                 Order Review ({items.length} {items.length === 1 ? 'item' : 'items'})
               </h2>
 

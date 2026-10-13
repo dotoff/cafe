@@ -95,7 +95,7 @@ export function ProductCard({ product }: ProductCardProps) {
 
   return (
     <>
-      <div className="bg-white rounded-xl overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col relative">
+      <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 rounded-2xl overflow-hidden group shadow-sm hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 flex flex-col relative">
         <div className="relative aspect-[4/3] overflow-hidden bg-brand-cream flex items-center justify-center p-6">
           {product.isBestSeller && (
             <span className="absolute top-3 left-3 z-10 bg-brand-gold text-brand-dark text-xs px-2.5 py-1 rounded-full font-bold shadow-sm">
