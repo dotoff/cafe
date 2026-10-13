@@ -37,7 +37,7 @@ export default function OrderSuccessClient({
   if (!order) {
     return (
       <div className="bg-brand-cream min-h-screen py-20 px-4">
-        <div className="max-w-md mx-auto bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl p-10 text-center shadow-sm">
+        <div className="max-w-md mx-auto bg-white border border-gray-100 rounded-3xl p-10 text-center shadow-sm">
           <div className="w-16 h-16 bg-emerald-100 text-emerald-700 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">
             ✓
           </div>
@@ -87,12 +87,12 @@ export default function OrderSuccessClient({
       <div className="max-w-3xl mx-auto print:max-w-full">
         
         {/* Success Header (Hidden when printing packing slip) */}
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-8 md:p-10 shadow-sm text-center mb-8 border border-emerald-200 print:hidden">
+        <div className="bg-white rounded-3xl p-8 md:p-10 shadow-sm text-center mb-8 border border-gray-100 print:hidden">
           <div className="w-20 h-20 bg-emerald-100 text-emerald-600 rounded-full flex items-center justify-center mx-auto mb-5 shadow-inner">
             <CheckCircle2 size={44} />
           </div>
-          <span className="text-xs font-bold tracking-widest text-emerald-700 uppercase bg-emerald-100/80 border border-emerald-200 px-3.5 py-1 rounded-full">
-            🎉 Payment Successful & Verified
+          <span className="text-xs font-bold tracking-widest text-emerald-800 uppercase bg-emerald-50 border border-emerald-200/60 px-3.5 py-1 rounded-full">
+            🎉 Payment Successful & Confirmed
           </span>
           <h1 className="text-3xl md:text-4xl font-serif text-brand-dark mt-3 mb-2">
             Thank you, {order.customerName}!
@@ -100,7 +100,7 @@ export default function OrderSuccessClient({
           <p className="text-gray-600 text-sm max-w-md mx-auto">
             Your payment has been received via Razorpay and your order is officially confirmed with our bakery!
           </p>
-          <div className="inline-flex items-center gap-2 mt-4 bg-white/90 px-5 py-2.5 rounded-2xl border border-emerald-200 text-brand-dark font-mono font-bold text-lg shadow-xs">
+          <div className="inline-flex items-center gap-2 mt-4 bg-brand-cream px-5 py-2.5 rounded-2xl border border-brand-creamdark text-brand-dark font-mono font-bold text-lg shadow-xs">
             <span>#{order.orderNumber}</span>
           </div>
           {order.razorpayPaymentId && (
@@ -111,7 +111,7 @@ export default function OrderSuccessClient({
         </div>
 
         {/* Kitchen Preparation & Live Order Tracker (Hidden when printing packing slip) */}
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-8 shadow-sm mb-8 border border-emerald-200 print:hidden">
+        <div className="bg-gradient-to-br from-white via-emerald-50/20 to-emerald-50/40 rounded-3xl p-8 shadow-sm mb-8 border border-emerald-100 print:hidden">
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
             <h2 className="text-xl font-serif text-brand-dark flex items-center gap-2">
               <span>🧁</span>
@@ -123,7 +123,7 @@ export default function OrderSuccessClient({
                 ? 'Freshly Baking in Our Kitchen'
                 : 'Order Confirmed & Queued for Kitchen'}
             </h2>
-            <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100 text-emerald-800 border border-emerald-200">
+            <span className="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-emerald-100/80 text-emerald-800 border border-emerald-200/60">
               Current Status: {statusDisplayLabels[status] || 'Confirmed'}
             </span>
           </div>
@@ -132,16 +132,16 @@ export default function OrderSuccessClient({
           </p>
 
           {/* Visual 3-Step Order Progress */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 bg-white/90 p-4 rounded-2xl border border-emerald-200/80 mb-6 text-left text-xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5 bg-white/80 p-4 rounded-2xl border border-emerald-100/60 mb-6 text-left text-xs">
             {/* Step 1: Payment & Confirmation (Active/Completed immediately) */}
-            <div className="p-4 bg-emerald-50/90 rounded-xl border-2 border-emerald-400/70 shadow-xs relative">
+            <div className="p-4 bg-emerald-50/70 rounded-xl border border-emerald-200/80 shadow-xs relative">
               <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded-full">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 bg-emerald-100/80 px-2 py-0.5 rounded-full">
                   Step 1 • Completed
                 </span>
                 <span className="text-emerald-600 font-bold">✓</span>
               </div>
-              <span className="font-bold text-emerald-950 block text-sm">Payment Verified</span>
+              <span className="font-bold text-gray-900 block text-sm">Payment Verified</span>
               <span className="text-emerald-700 font-medium block mt-0.5">₹{order.total} Paid via Razorpay</span>
             </div>
 
@@ -149,8 +149,8 @@ export default function OrderSuccessClient({
             <div
               className={`p-4 rounded-xl transition-all ${
                 isPreparing
-                  ? 'bg-amber-50/90 border-2 border-amber-400/70 shadow-xs'
-                  : 'bg-gray-50/80 border border-dashed border-gray-300 opacity-80'
+                  ? 'bg-amber-50/80 border border-amber-200 shadow-xs'
+                  : 'bg-gray-50/70 border border-dashed border-gray-200 opacity-80'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
@@ -177,8 +177,8 @@ export default function OrderSuccessClient({
             <div
               className={`p-4 rounded-xl transition-all ${
                 isOutForDelivery
-                  ? 'bg-blue-50/90 border-2 border-blue-400/70 shadow-xs'
-                  : 'bg-gray-50/80 border border-dashed border-gray-300 opacity-80'
+                  ? 'bg-blue-50/80 border border-blue-200 shadow-xs'
+                  : 'bg-gray-50/70 border border-dashed border-gray-200 opacity-80'
               }`}
             >
               <div className="flex items-center justify-between mb-1.5">
@@ -214,7 +214,7 @@ export default function OrderSuccessClient({
         </div>
 
         {/* Order Receipt Details */}
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 rounded-3xl p-8 shadow-sm border border-emerald-200 print:bg-white print:shadow-none print:p-0 print:border-none">
+        <div className="bg-white rounded-3xl p-8 shadow-sm border border-gray-100 print:shadow-none print:p-0 print:border-none">
           {/* Print-Only Official Slip Header */}
           <div className="hidden print:block pb-4 mb-4 border-b-2 border-black">
             <div className="flex justify-between items-start">
@@ -231,19 +231,19 @@ export default function OrderSuccessClient({
             </div>
           </div>
 
-          <div className="flex items-center justify-between mb-6 pb-4 border-b border-emerald-200/60 print:hidden">
+          <div className="flex items-center justify-between mb-6 pb-4 border-b border-gray-100 print:hidden">
             <h3 className="text-lg font-serif text-brand-dark flex items-center gap-2">
-              <Receipt size={20} className="text-emerald-700" /> Order Receipt & Packing Slip
+              <Receipt size={20} className="text-gray-400" /> Order Receipt & Packing Slip
             </h3>
             <div className="flex items-center gap-3">
               <button
                 onClick={() => window.print()}
-                className="text-xs bg-white hover:bg-emerald-50 text-brand-dark border border-emerald-200 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors print:hidden shadow-2xs"
+                className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-lg font-semibold flex items-center gap-1 transition-colors print:hidden"
               >
                 🖨️ Print Slip / Label
               </button>
               <span className="text-xs text-gray-500 font-mono">
-                Status: <span className="font-bold text-emerald-700">{statusDisplayLabels[status] || 'Confirmed'}</span>
+                Status: <span className="font-bold text-amber-600 capitalize">{order.orderStatus || 'New'}</span>
               </span>
             </div>
           </div>

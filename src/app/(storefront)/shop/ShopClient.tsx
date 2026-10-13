@@ -78,7 +78,7 @@ export function ShopClient({
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 flex flex-col md:flex-row gap-8">
       {/* Mobile Filter Toggle */}
-      <div className="md:hidden flex items-center justify-between bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-4 rounded-xl shadow-sm mb-4">
+      <div className="md:hidden flex items-center justify-between bg-white border border-gray-100 p-4 rounded-xl shadow-sm mb-4">
         <span className="font-semibold text-gray-800">Filters & Search</span>
         <button onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)} className="p-2 bg-gray-100 rounded-lg">
           <SlidersHorizontal size={20} />
@@ -87,7 +87,7 @@ export function ShopClient({
 
       {/* Sidebar */}
       <aside className={`${isMobileFiltersOpen ? 'block' : 'hidden'} md:block w-full md:w-64 shrink-0 z-10`}>
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-6 rounded-2xl shadow-sm md:sticky md:top-24">
+        <div className="bg-white border border-gray-100 p-6 rounded-2xl shadow-sm md:sticky md:top-24">
           
           {/* Search */}
           <div className="mb-8 relative">
@@ -96,7 +96,7 @@ export function ShopClient({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search products..." 
-              className="w-full pl-10 pr-4 py-3 bg-white border border-gray-200 rounded-xl outline-none focus:border-brand-dark focus:ring-2 focus:ring-brand-light/20 transition-all text-sm"
+              className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl outline-none focus:border-brand-dark focus:ring-2 focus:ring-brand-light/20 transition-all text-sm"
             />
             <Search size={18} className="absolute left-3 top-3.5 text-gray-400" />
             {searchQuery && (
@@ -109,12 +109,12 @@ export function ShopClient({
             )}
           </div>
 
-          <h3 className="font-serif text-xl border-b border-emerald-200/60 pb-4 mb-4 text-brand-dark">Categories</h3>
+          <h3 className="font-serif text-xl border-b border-gray-100 pb-4 mb-4 text-brand-dark">Categories</h3>
           <ul className="space-y-2">
             <li>
               <button 
                 onClick={() => { setSelectedCategory(undefined); setIsMobileFiltersOpen(false); }}
-                className={`block text-sm text-left w-full transition-colors ${!selectedCategory ? 'font-bold text-brand-dark bg-brand-cream px-4 py-2.5 rounded-lg border border-brand-creamdark' : 'text-gray-600 hover:text-brand-dark px-4 py-2.5 rounded-lg hover:bg-white/70'}`}
+                className={`block text-sm text-left w-full transition-colors ${!selectedCategory ? 'font-bold text-brand-dark bg-brand-cream px-4 py-2.5 rounded-lg border border-brand-creamdark' : 'text-gray-600 hover:text-brand-dark px-4 py-2.5 rounded-lg hover:bg-gray-50'}`}
               >
                 All Products
               </button>
@@ -123,7 +123,7 @@ export function ShopClient({
               <li key={cat.id}>
                 <button 
                   onClick={() => { setSelectedCategory(cat.slug); setIsMobileFiltersOpen(false); }}
-                  className={`block text-sm text-left w-full transition-colors ${selectedCategory === cat.slug ? 'font-bold text-brand-dark bg-brand-cream px-4 py-2.5 rounded-lg border border-brand-creamdark' : 'text-gray-600 hover:text-brand-dark px-4 py-2.5 rounded-lg hover:bg-white/70'}`}
+                  className={`block text-sm text-left w-full transition-colors ${selectedCategory === cat.slug ? 'font-bold text-brand-dark bg-brand-cream px-4 py-2.5 rounded-lg border border-brand-creamdark' : 'text-gray-600 hover:text-brand-dark px-4 py-2.5 rounded-lg hover:bg-gray-50'}`}
                 >
                   {cat.title}
                 </button>
@@ -137,12 +137,12 @@ export function ShopClient({
       <main className="flex-grow">
         
         {/* Top Bar: Active Filters & Sorting */}
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200/80 p-4 rounded-2xl shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="bg-white border border-gray-100 p-4 rounded-2xl shadow-sm mb-6 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-sm text-gray-500 mr-2">Active:</span>
             {!selectedCategory && !searchQuery && (
-              <span className="text-sm font-medium bg-white border border-emerald-100 px-3 py-1 rounded-full">All Products</span>
+              <span className="text-sm font-medium bg-gray-100 px-3 py-1 rounded-full">All Products</span>
             )}
             {activeCategoryTitle && (
               <span className="text-sm font-medium bg-brand-cream text-brand-dark border border-brand-creamdark px-3 py-1 rounded-full flex items-center gap-1">
@@ -163,7 +163,7 @@ export function ShopClient({
             <select 
               value={sortOption}
               onChange={(e) => setSortOption(e.target.value)}
-              className="text-sm bg-white border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-brand-dark"
+              className="text-sm bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 outline-none focus:border-brand-dark"
             >
               <option value="name-asc">Alphabetical: A-Z</option>
               <option value="name-desc">Alphabetical: Z-A</option>
@@ -178,7 +178,7 @@ export function ShopClient({
         </div>
         
         {displayProducts.length === 0 ? (
-          <div className="bg-gradient-to-br from-white to-emerald-50/50 p-12 text-center rounded-2xl shadow-sm border border-dashed border-emerald-300">
+          <div className="bg-white p-12 text-center rounded-2xl shadow-sm border border-dashed border-gray-300">
             <div className="text-4xl mb-4">🔍</div>
             <p className="text-xl text-gray-800 font-medium mb-2">No products found</p>
             <p className="text-gray-500 mb-6">We couldn't find any products matching your current filters.</p>

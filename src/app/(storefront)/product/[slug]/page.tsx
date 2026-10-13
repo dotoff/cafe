@@ -44,7 +44,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
           <ArrowLeft size={20} /> Back to Shop
         </Link>
         
-        <div className="bg-gradient-to-br from-white to-emerald-50/50 border border-emerald-200 rounded-3xl shadow-sm overflow-hidden flex flex-col md:flex-row">
+        <div className="bg-white border border-gray-100 rounded-3xl shadow-sm overflow-hidden flex flex-col md:flex-row">
           
           {/* Product Image */}
           <div className="md:w-1/2 bg-brand-creamdark p-12 flex items-center justify-center min-h-[400px]">
