@@ -79,124 +79,94 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     setLoading(true)
 
     try {
-      // 1. RAZORPAY PAYMENT FLOW
-      if (formData.paymentMethod === 'razorpay') {
-        const isLoaded = await loadRazorpayScript()
-        if (!isLoaded) {
-          throw new Error('Failed to load Razorpay payment SDK. Please check your internet connection.')
-        }
-
-        // Create Order on Backend
-        const createRes = await fetch('/api/razorpay/create-order', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            amount: total,
-            currency: 'INR',
-            receipt: `rcpt_${Date.now()}`,
-          }),
-        })
-
-        const orderData = await createRes.json()
-        if (!createRes.ok || !orderData.orderId) {
-          throw new Error(orderData.error || 'Failed to initialize Razorpay order')
-        }
-
-        // Open Razorpay Modal
-        const options = {
-          key: orderData.keyId,
-          amount: orderData.amount,
-          currency: orderData.currency || 'INR',
-          name: settings?.storeName || 'Flavourite Cafe & Bakery',
-          description: `Fresh Bakery Order (${items.length} items)`,
-          order_id: orderData.orderId,
-          handler: async function (response: any) {
-            try {
-              setLoading(true)
-              const verifyRes = await fetch('/api/razorpay/verify-payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  razorpay_order_id: response.razorpay_order_id,
-                  razorpay_payment_id: response.razorpay_payment_id,
-                  razorpay_signature: response.razorpay_signature,
-                  orderDetails: {
-                    ...formData,
-                    items,
-                    subtotal,
-                    tax,
-                    shipping,
-                    total,
-                  },
-                }),
-              })
-
-              const verifyData = await verifyRes.json()
-              if (!verifyRes.ok || !verifyData.success) {
-                throw new Error(verifyData.error || 'Payment signature verification failed')
-              }
-
-              clearCart()
-              router.push(`/order-success?orderId=${encodeURIComponent(verifyData.orderNumber)}`)
-            } catch (verifyErr: any) {
-              setError(verifyErr?.message || 'Payment verification failed. Please contact support.')
-              setLoading(false)
-            }
-          },
-          prefill: {
-            name: formData.customerName,
-            contact: formData.customerPhone,
-            email: formData.customerEmail || undefined,
-          },
-          notes: {
-            address: formData.deliveryAddress,
-            pincode: formData.pincode,
-            specialInstructions: formData.specialInstructions || '',
-          },
-          theme: {
-            color: '#3E2723',
-          },
-          modal: {
-            ondismiss: function () {
-              setLoading(false)
-            },
-          },
-        }
-
-        const razorpayInstance = new (window as any).Razorpay(options)
-        razorpayInstance.on('payment.failed', function (failRes: any) {
-          setError(failRes.error?.description || 'Payment was declined or cancelled')
-          setLoading(false)
-        })
-        razorpayInstance.open()
-        return
+      const isLoaded = await loadRazorpayScript()
+      if (!isLoaded) {
+        throw new Error('Failed to load Razorpay payment SDK. Please check your internet connection.')
       }
 
-      // 2. DIRECT UPI & WHATSAPP FLOW
-      const res = await fetch('/api/checkout', {
+      // Create Order on Backend
+      const createRes = await fetch('/api/razorpay/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          ...formData,
-          items,
-          subtotal,
-          tax,
-          shipping,
-          total,
+          amount: total,
+          currency: 'INR',
+          receipt: `rcpt_${Date.now()}`,
         }),
       })
 
-      const data = await res.json()
-
-      if (!res.ok) {
-        throw new Error(data.error || 'Failed to place order')
+      const orderData = await createRes.json()
+      if (!createRes.ok || !orderData.orderId) {
+        throw new Error(orderData.error || 'Failed to initialize Razorpay order')
       }
 
-      // Clear the local cart
-      clearCart()
+      // Open Razorpay Modal
+      const options = {
+        key: orderData.keyId,
+        amount: orderData.amount,
+        currency: orderData.currency || 'INR',
+        name: settings?.storeName || 'Flavourite Cafe & Bakery',
+        description: `Fresh Bakery Order (${items.length} items)`,
+        order_id: orderData.orderId,
+        handler: async function (response: any) {
+          try {
+            setLoading(true)
+            const verifyRes = await fetch('/api/razorpay/verify-payment', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_signature: response.razorpay_signature,
+                orderDetails: {
+                  ...formData,
+                  items,
+                  subtotal,
+                  tax,
+                  shipping,
+                  total,
+                },
+              }),
+            })
 
-      // Redirect to Order Success Confirmation page
-      router.push(`/order-success?orderId=${encodeURIComponent(data.orderNumber)}`)
+            const verifyData = await verifyRes.json()
+            if (!verifyRes.ok || !verifyData.success) {
+              throw new Error(verifyData.error || 'Payment signature verification failed')
+            }
+
+            clearCart()
+            router.push(`/order-success?orderId=${encodeURIComponent(verifyData.orderNumber)}`)
+          } catch (verifyErr: any) {
+            setError(verifyErr?.message || 'Payment verification failed. Please contact support.')
+            setLoading(false)
+          }
+        },
+        prefill: {
+          name: formData.customerName,
+          contact: formData.customerPhone,
+          email: formData.customerEmail || undefined,
+        },
+        notes: {
+          address: formData.deliveryAddress,
+          pincode: formData.pincode,
+          specialInstructions: formData.specialInstructions || '',
+        },
+        theme: {
+          color: '#3E2723',
+        },
+        modal: {
+          ondismiss: function () {
+            setLoading(false)
+          },
+        },
+      }
+
+      const razorpayInstance = new (window as any).Razorpay(options)
+      razorpayInstance.on('payment.failed', function (failRes: any) {
+        setError(failRes.error?.description || 'Payment was declined or cancelled')
+        setLoading(false)
+      })
+      razorpayInstance.open()
     } catch (err: any) {
       setError(err?.message || 'Something went wrong. Please try again.')
       setLoading(false)

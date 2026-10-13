@@ -11,31 +11,10 @@ export default function CartClient({ settings }: { settings: any }) {
   const taxRate = settings?.taxRate ?? 5
   const freeThreshold = settings?.freeShippingThreshold ?? 500
   const flatShipping = settings?.shippingFlatRate ?? 50
-  const whatsappNumber = settings?.whatsappNumber || '917013205977'
 
   const tax = Math.round(subtotal * (taxRate / 100))
   const shipping = subtotal >= freeThreshold ? 0 : flatShipping
   const total = subtotal + tax + shipping
-
-  const handleCheckout = () => {
-    let message = `*New Order from ${settings?.storeName || 'Flavourite'}*%0A%0A`
-    message += `*Items:*%0A`
-    
-    items.forEach((item, index) => {
-      const variantText = item.variantName && item.variantName !== 'Standard' ? ` - ${item.variantName}` : ''
-      message += `${index + 1}. ${item.name}${variantText} - ${item.quantity} x ₹${item.price} = ₹${item.quantity * item.price}%0A`
-    })
-
-    message += `%0A*Subtotal:* ₹${subtotal}%0A`
-    message += `*Tax (${taxRate}%):* ₹${tax}%0A`
-    if (shipping > 0) message += `*Shipping:* ₹${shipping}%0A`
-    message += `*Total Amount:* ₹${total}%0A%0A`
-    message += `Please confirm my order and share payment details.`
-
-    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${message}`
-
-    window.open(whatsappUrl, '_blank')
-  }
 
   if (items.length === 0) {
     return (
@@ -172,13 +151,6 @@ export default function CartClient({ settings }: { settings: any }) {
               >
                 Proceed to Checkout <ArrowRight size={18} />
               </Link>
-
-              <button 
-                onClick={handleCheckout}
-                className="w-full mt-3 bg-white border border-green-600 text-green-700 py-3 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-green-50 transition-colors text-sm"
-              >
-                💬 Quick Order via WhatsApp
-              </button>
               
               <Link href="/shop" className="block text-center mt-6 text-brand-dark font-medium hover:underline">
                 ← Continue Shopping
