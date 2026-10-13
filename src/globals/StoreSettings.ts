@@ -27,25 +27,25 @@ export const StoreSettings: GlobalConfig = {
           ]
         },
         {
-          label: 'Checkout, Payments & WhatsApp',
+          label: 'Checkout & Razorpay',
           fields: [
             { 
               name: 'whatsappNumber', 
               type: 'text', 
               required: true,
               defaultValue: '917013205977', 
-              admin: { description: 'The phone number to receive orders. Include country code without + (e.g. 917013205977)' } 
+              admin: { description: 'Store contact number (e.g. 917013205977)' } 
             },
             {
               name: 'upiId',
               type: 'text',
               defaultValue: '7013205977@upi',
-              admin: { description: 'UPI ID for QR Code and direct customer payments (e.g. 7013205977@upi or yourname@okhdfcbank).' }
+              admin: { description: 'Optional store UPI ID.' }
             },
             {
               name: 'razorpayKeyId',
               type: 'text',
-              admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...). Once approved by Razorpay, paste it here to activate online card/netbanking payments.' }
+              admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...). Paste here to activate Razorpay checkout.' }
             },
             {
               name: 'razorpayKeySecret',
@@ -71,6 +71,49 @@ export const StoreSettings: GlobalConfig = {
               admin: { description: 'Cart subtotal required to get free shipping.' }
             },
           ]
+        },
+        {
+          label: 'Shiprocket Logistics',
+          fields: [
+            {
+              name: 'shiprocketAutoPush',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: {
+                description: 'Automatically push every paid order to Shiprocket immediately after Razorpay payment verification.',
+              },
+            },
+            {
+              name: 'shiprocketEmail',
+              type: 'text',
+              admin: {
+                description: 'Shiprocket API User Email (Create in Shiprocket Panel -> Settings -> API -> Add New API User).',
+              },
+            },
+            {
+              name: 'shiprocketPassword',
+              type: 'text',
+              admin: {
+                description: 'Shiprocket API User Password.',
+              },
+            },
+            {
+              name: 'shiprocketPickupLocation',
+              type: 'text',
+              defaultValue: 'Primary',
+              admin: {
+                description: 'Exact name of your Pickup Location in Shiprocket (e.g. "Primary", "Home", "Bakery").',
+              },
+            },
+            {
+              name: 'shiprocketDefaultWeight',
+              type: 'number',
+              defaultValue: 0.5,
+              admin: {
+                description: 'Default package weight in Kilograms (e.g. 0.5 for 500g).',
+              },
+            },
+          ],
         },
         {
           label: 'Social Media',

@@ -43,7 +43,12 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: 'No order found matching your search. Please check the Order ID or phone number.' }, { status: 404 })
     }
 
-    const order = result.docs[0]
+    const order: any = result.docs[0]
+
+    let awbCode = order.awbCode || null
+    let courierName = order.courierName || null
+    let trackingUrl = order.trackingUrl || (awbCode ? `https://shiprocket.co/tracking/${awbCode}` : null)
+    let shiprocketStatus = order.shiprocketStatus || null
 
     // Sanitize order details for public tracking
     return NextResponse.json({
@@ -56,6 +61,11 @@ export async function GET(req: Request) {
         createdAt: order.createdAt,
         deliveryDate: order.deliveryDate,
         deliverySlot: order.deliverySlot,
+        shiprocketOrderId: order.shiprocketOrderId || null,
+        awbCode,
+        courierName,
+        trackingUrl,
+        shiprocketStatus,
         items: order.items?.map((item: any) => ({
           name: item.name,
           variantName: item.variantName,

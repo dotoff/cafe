@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import crypto from 'crypto'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
+import { pushOrderToShiprocket, getShiprocketSettings } from '@/lib/shiprocket'
 
 export async function POST(req: Request) {
   try {
@@ -68,6 +69,8 @@ export async function POST(req: Request) {
       customerEmail,
       deliveryAddress,
       landmark,
+      city,
+      state,
       pincode,
       deliveryDate,
       deliverySlot,
@@ -95,6 +98,8 @@ export async function POST(req: Request) {
         customerEmail: customerEmail || undefined,
         deliveryAddress: deliveryAddress || 'Address provided during payment',
         landmark: landmark || undefined,
+        city: city || 'Hyderabad',
+        state: state || 'Telangana',
         pincode: pincode || '000000',
         deliveryDate: deliveryDate ? new Date(deliveryDate).toISOString() : undefined,
         deliverySlot: deliverySlot || 'asap',
@@ -115,11 +120,35 @@ export async function POST(req: Request) {
       },
     })
 
+    // Auto-push order to Shiprocket if configured
+    let shiprocketResult: any = null
+    try {
+      const srSettings = await getShiprocketSettings()
+      if (srSettings && srSettings.autoPush !== false) {
+        shiprocketResult = await pushOrderToShiprocket(order)
+        await payload.update({
+          collection: 'orders',
+          id: order.id,
+          data: {
+            shiprocketOrderId: shiprocketResult.shiprocketOrderId || undefined,
+            shiprocketShipmentId: shiprocketResult.shiprocketShipmentId || undefined,
+            awbCode: shiprocketResult.awbCode || undefined,
+            courierName: shiprocketResult.courierName || undefined,
+            trackingUrl: shiprocketResult.trackingUrl || undefined,
+            shiprocketStatus: shiprocketResult.status || undefined,
+          },
+        })
+      }
+    } catch (srErr) {
+      console.error('Non-fatal Shiprocket auto-push error:', srErr)
+    }
+
     return NextResponse.json({
       success: true,
       verified: true,
       orderNumber,
       orderId: order.id,
+      shiprocket: shiprocketResult,
     })
   } catch (error: any) {
     console.error('Error during Razorpay payment verification:', error)

@@ -72,7 +72,7 @@ export default function OrderSuccessClient({ order, settings }: { order: any; se
 
           {/* Track Order Link */}
           <Link
-            href="/track-order"
+            href={`/track-order?id=${encodeURIComponent(order.orderNumber)}`}
             className="w-full bg-brand-dark hover:bg-brand-medium text-white py-4 px-6 rounded-2xl font-bold flex items-center justify-center gap-3 transition-all shadow-md text-center"
           >
             <PackageCheck size={22} />

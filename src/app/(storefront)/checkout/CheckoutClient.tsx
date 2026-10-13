@@ -19,6 +19,8 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     customerEmail: '',
     deliveryAddress: '',
     landmark: '',
+    city: 'Hyderabad',
+    state: 'Telangana',
     pincode: '',
     deliveryDate: '',
     deliverySlot: 'asap',
@@ -320,6 +322,37 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       value={formData.pincode}
                       onChange={handleChange}
                       placeholder="500034"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      City <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="city"
+                      required
+                      value={formData.city}
+                      onChange={handleChange}
+                      placeholder="Hyderabad"
+                      className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">
+                      State <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      name="state"
+                      required
+                      value={formData.state}
+                      onChange={handleChange}
+                      placeholder="Telangana"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>

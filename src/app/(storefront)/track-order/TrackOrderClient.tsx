@@ -171,6 +171,48 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
               </div>
             </div>
 
+            {/* Shiprocket Courier & AWB Tracking Info */}
+            {(order.awbCode || order.shiprocketOrderId || order.courierName) && (
+              <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 mb-6 text-sm">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                  <div>
+                    <p className="text-xs uppercase font-bold text-emerald-700 mb-1 flex items-center gap-1.5">
+                      <span>🚚</span> Shiprocket Courier Dispatch
+                    </p>
+                    <p className="text-xs text-gray-700">
+                      {order.courierName ? (
+                        <>
+                          Courier Partner: <strong className="text-gray-900">{order.courierName}</strong>
+                        </>
+                      ) : (
+                        'Order synced with Shiprocket Logistics'
+                      )}
+                      {order.awbCode && (
+                        <>
+                          {' '}• AWB: <strong className="font-mono text-gray-900">{order.awbCode}</strong>
+                        </>
+                      )}
+                    </p>
+                    {order.shiprocketStatus && (
+                      <p className="text-[11px] text-emerald-800 mt-1 font-medium">
+                        Status: {order.shiprocketStatus}
+                      </p>
+                    )}
+                  </div>
+                  {order.trackingUrl && (
+                    <a
+                      href={order.trackingUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="bg-emerald-700 hover:bg-emerald-800 text-white px-4 py-2 rounded-xl text-xs font-bold transition-colors shrink-0 text-center"
+                    >
+                      Live Courier Map →
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
             {/* Order Items Preview */}
             <div className="bg-gray-50 rounded-2xl p-4 mb-6 text-sm">
               <p className="text-xs uppercase font-bold text-gray-400 mb-2">Items in this order</p>
@@ -190,21 +232,19 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
               </div>
             </div>
 
-            {/* Contact Baker CTA */}
+            {/* Action CTA */}
             <div className="flex flex-col sm:flex-row gap-3">
-              <a
-                href={`https://wa.me/${whatsappNumber}?text=Hi!%20I'm%20checking%20the%20status%20of%20Order%20${order.orderNumber}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex-1 bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-xl font-bold flex items-center justify-center gap-2 transition-colors text-sm shadow-md"
-              >
-                <MessageCircle size={18} /> Chat with Bakery on WhatsApp
-              </a>
               <Link
                 href="/shop"
-                className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-3 px-4 rounded-xl font-semibold flex items-center justify-center transition-colors text-sm text-center"
+                className="flex-1 bg-brand-dark hover:bg-brand-medium text-white py-3.5 px-4 rounded-xl font-bold flex items-center justify-center transition-colors text-sm text-center shadow-sm"
               >
-                Back to Shop
+                Continue Shopping
+              </Link>
+              <Link
+                href="/contact"
+                className="bg-gray-100 hover:bg-gray-200 text-gray-800 py-3.5 px-6 rounded-xl font-semibold flex items-center justify-center transition-colors text-sm text-center"
+              >
+                Need Help? Contact Us
               </Link>
             </div>
 

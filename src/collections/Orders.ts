@@ -102,15 +102,26 @@ export const Orders: CollectionConfig = {
                 {
                   name: 'landmark',
                   type: 'text',
-                  admin: { width: '50%' },
+                  admin: { width: '34%' },
                 },
                 {
-                  name: 'pincode',
+                  name: 'city',
                   type: 'text',
-                  required: true,
-                  admin: { width: '50%' },
+                  defaultValue: 'Hyderabad',
+                  admin: { width: '33%' },
+                },
+                {
+                  name: 'state',
+                  type: 'text',
+                  defaultValue: 'Telangana',
+                  admin: { width: '33%' },
                 },
               ],
+            },
+            {
+              name: 'pincode',
+              type: 'text',
+              required: true,
             },
             {
               type: 'row',
@@ -180,10 +191,10 @@ export const Orders: CollectionConfig = {
             {
               name: 'paymentMethod',
               type: 'select',
-              defaultValue: 'upi_whatsapp',
+              defaultValue: 'razorpay',
               options: [
-                { label: 'UPI / WhatsApp Pay', value: 'upi_whatsapp' },
                 { label: 'Razorpay (Cards/UPI/Netbanking)', value: 'razorpay' },
+                { label: 'UPI / WhatsApp Pay', value: 'upi_whatsapp' },
                 { label: 'Cash on Delivery', value: 'cod' },
               ],
             },
@@ -199,6 +210,67 @@ export const Orders: CollectionConfig = {
               type: 'text',
               admin: {
                 description: 'Razorpay Payment ID receipt.',
+              },
+            },
+          ],
+        },
+        {
+          label: 'Shiprocket & Courier',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'shiprocketOrderId',
+                  type: 'text',
+                  admin: {
+                    width: '50%',
+                    description: 'Shiprocket Order ID (auto-populated when synced).',
+                  },
+                },
+                {
+                  name: 'shiprocketShipmentId',
+                  type: 'text',
+                  admin: {
+                    width: '50%',
+                    description: 'Shiprocket Shipment ID.',
+                  },
+                },
+              ],
+            },
+            {
+              type: 'row',
+              fields: [
+                {
+                  name: 'courierName',
+                  type: 'text',
+                  admin: {
+                    width: '50%',
+                    description: 'Assigned Courier Partner (e.g. BlueDart, Delhivery, Shadowfax).',
+                  },
+                },
+                {
+                  name: 'awbCode',
+                  type: 'text',
+                  admin: {
+                    width: '50%',
+                    description: 'Courier AWB Tracking Code.',
+                  },
+                },
+              ],
+            },
+            {
+              name: 'trackingUrl',
+              type: 'text',
+              admin: {
+                description: 'Live courier tracking link shown to the customer on the Track Order page.',
+              },
+            },
+            {
+              name: 'shiprocketStatus',
+              type: 'text',
+              admin: {
+                description: 'Latest Shiprocket sync status or shipment milestone.',
               },
             },
           ],
