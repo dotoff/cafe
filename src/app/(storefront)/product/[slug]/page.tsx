@@ -4,6 +4,8 @@ import Link from 'next/link'
 import { ArrowLeft, Leaf, Star, ShieldCheck } from 'lucide-react'
 import { ProductForm } from '@/components/ProductForm'
 
+export const dynamic = 'force-dynamic'
+
 async function getProduct(slug: string) {
   try {
     const payload = await getPayload({ config })

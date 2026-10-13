@@ -3,31 +3,9 @@ import config from '@payload-config'
 import Link from 'next/link'
 import { ArrowRight, Leaf, Star, Gift, Truck } from 'lucide-react'
 import { ProductCard } from '@/components/ProductCard'
+import { HeroBannerCarousel } from '@/components/HeroBannerCarousel'
 
-// Helper to determine if a hex color is "light" or "dark" for text contrast
-const isDarkColor = (color: string) => {
-  if (!color) return false
-  const hex = color.startsWith('#') ? color.replace('#', '') : ''
-  if (!hex) return ['chocolate', 'pink', 'blue', 'dark', 'purple'].includes(color)
-  const r = parseInt(hex.substring(0, 2), 16) || 0
-  const g = parseInt(hex.substring(2, 4), 16) || 0
-  const b = parseInt(hex.substring(4, 6), 16) || 0
-  const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255
-  return luminance < 0.5
-}
-
-// Helper for banner themes
-const getBannerGradient = (theme: string) => {
-  if (theme?.startsWith('#')) return theme // Solid hex color
-  switch (theme) {
-    case 'chocolate': return '#5D4037'
-    case 'gold': return '#FBC02D'
-    case 'pink': return '#E91E63'
-    case 'blue': return '#1976D2'
-    case 'dark': return '#1e3f20'
-    default: return '#FDFBF7'
-  }
-}
+export const dynamic = 'force-dynamic'
 
 // Helper for category themes
 const getCategoryGradient = (theme: string) => {
@@ -48,7 +26,7 @@ async function getHomepageData() {
     const payload = await getPayload({ config })
     
     const [banners, categories, bestSellersResult] = await Promise.all([
-      payload.find({ collection: 'banners', where: { isActive: { equals: true } }, limit: 1 }),
+      payload.find({ collection: 'banners', where: { isActive: { equals: true } }, limit: 20, sort: 'createdAt' }),
       payload.find({ collection: 'categories', limit: 10, sort: 'title' }),
       payload.find({ collection: 'products', where: { isBestSeller: { equals: true } }, limit: 4 }),
     ])
@@ -70,78 +48,17 @@ async function getHomepageData() {
   }
 }
 
-// Check if theme is exactly the brand cream to preserve brand green accents
-const isBrandCream = (theme: string) => {
-  return !theme || theme === 'default' || theme.toUpperCase() === '#FDFBF7'
-}
-
-// Helper for full-width banner text color
-const getBannerTextColor = (theme: string) => {
-  if (isDarkColor(theme)) return 'text-white'
-  return isBrandCream(theme) ? 'text-brand-dark' : 'text-gray-900'
-}
-
-const getBannerSubTextColor = (theme: string) => {
-  if (isDarkColor(theme)) return 'text-white/80'
-  return isBrandCream(theme) ? 'text-brand-dark/80' : 'text-gray-700'
-}
-
 export default async function Home() {
   const data = await getHomepageData()
   
   const displayCategories = data.categories
   const displayProducts = data.bestSellers
-  const banner = data.banners.length > 0 ? data.banners[0] : null
-
-  const bannerImageUrl = banner?.image && typeof banner.image === 'object' ? banner.image.url : null
-  const theme = banner?.colorTheme || 'default'
 
   return (
     <div className="bg-brand-cream min-h-screen">
       
-      {/* Hero Section */}
-      <section 
-        className="py-16 md:py-24 transition-colors duration-500"
-        style={{ background: getBannerGradient(theme) }}
-      >
-        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row items-center gap-12">
-          <div className="flex-1 text-center md:text-left">
-            <h1 className={`text-4xl md:text-6xl font-serif italic leading-tight mb-6 ${getBannerTextColor(theme)}`}>
-              {banner?.title || 'Moments are Sweeter with Flavourite'}
-            </h1>
-            <div className="flex items-center justify-center md:justify-start gap-4 mb-6">
-              <div className={`h-0.5 w-12 ${isDarkColor(theme) ? 'bg-white/30' : (isBrandCream(theme) ? 'bg-brand-dark' : 'bg-gray-900/20')}`}></div>
-              <span className="text-brand-gold text-2xl">✨</span>
-              <div className={`h-0.5 w-12 ${isDarkColor(theme) ? 'bg-white/30' : (isBrandCream(theme) ? 'bg-brand-dark' : 'bg-gray-900/20')}`}></div>
-            </div>
-            <p className={`mb-8 whitespace-pre-line ${getBannerSubTextColor(theme)}`}>
-              {banner?.description || 'Chocolates | Baked Goodies | Gift Hampers | Herbal Tea'}
-            </p>
-            <Link 
-              href={banner?.buttonLink || '/shop'} 
-              className={`inline-flex items-center gap-2 px-8 py-4 rounded-full font-semibold transition-all shadow-md hover:shadow-lg transform hover:-translate-y-1 ${
-                isDarkColor(theme) 
-                  ? (['dark', '#1e3f20', '#1E3F20'].includes(theme) ? 'bg-white text-brand-dark hover:bg-gray-100' : 'bg-white text-gray-900 hover:bg-gray-100')
-                  : (isBrandCream(theme) ? 'bg-brand-dark text-white hover:bg-brand-medium' : 'bg-gray-900 text-white hover:bg-gray-800')
-              }`}
-            >
-              {banner?.buttonText || 'SHOP NOW'} <ArrowRight size={20} />
-            </Link>
-          </div>
-          
-          <div className="flex-1 w-full max-w-md">
-            <div 
-              className="aspect-[4/3] rounded-2xl shadow-2xl flex items-center justify-center text-7xl overflow-hidden bg-black/10 border-4 border-white/20"
-            >
-              {bannerImageUrl ? (
-                <img src={bannerImageUrl} alt={banner?.title} className="w-full h-full object-cover" />
-              ) : (
-                '🛍️'
-              )}
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Banner Carousel Section */}
+      <HeroBannerCarousel banners={data.banners} />
 
       {/* Categories */}
       <section className="bg-white py-20">

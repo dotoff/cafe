@@ -3,6 +3,8 @@ import config from '@payload-config'
 import Link from 'next/link'
 import { ShopClient } from './ShopClient'
 
+export const dynamic = 'force-dynamic'
+
 async function getShopData() {
   try {
     const payload = await getPayload({ config })
