@@ -23,7 +23,25 @@ export const Orders: CollectionConfig = {
       name: 'orderNumber',
       type: 'text',
       required: true,
-      unique: true,
+      index: true,
+      validate: async (val: unknown, { req, id }: { req?: any; id?: string | number } = {}) => {
+        if (!val || typeof val !== 'string') return 'Order number is required'
+        if (!req?.payload) return true
+        try {
+          const existing = await req.payload.find({
+            collection: 'orders',
+            where: {
+              orderNumber: { equals: val },
+              ...(id ? { id: { not_equals: id } } : {}),
+            },
+            limit: 1,
+          })
+          if (existing?.docs?.length > 0) return 'An order with this order number already exists.'
+        } catch {
+          return true
+        }
+        return true
+      },
       admin: {
         description: 'Auto-generated unique Order ID (e.g. FLV-1001)',
         readOnly: true,
