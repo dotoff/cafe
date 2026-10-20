@@ -15,7 +15,7 @@ export const Orders: CollectionConfig = {
   access: {
     create: () => true, // Customers can submit orders via checkout API
     read: () => true,
-    update: ({ req: { user } }) => Boolean(user), // Only admin/mom can update order status
+    update: ({ req: { user } }) => Boolean(user), // Authenticated staff only
     delete: ({ req: { user } }) => Boolean(user),
   },
   fields: [

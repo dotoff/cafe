@@ -40,7 +40,7 @@ export const Products: CollectionConfig = {
       unique: true,
       admin: {
         position: 'sidebar',
-        hidden: true, // Automatically created behind the scenes so mom never has to worry about URLs
+        hidden: true, // Automatically generated from product name
       },
       hooks: {
         beforeValidate: [

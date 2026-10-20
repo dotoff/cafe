@@ -29,46 +29,69 @@ export async function GET() {
         name: p.name,
       }))
 
-    // Date calculations for "Today" (in IST / local time)
+    // Date calculations for Today, Last 30 Days, All-Time
     const now = new Date()
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+    const thirtyDaysAgo = todayStart - 30 * 24 * 60 * 60 * 1000
 
     let todayRevenue = 0
     let todayOrdersCount = 0
+    let monthRevenue = 0
+    let monthOrdersCount = 0
     let totalRevenue = 0
-    let bakingCount = 0
-    let outForDeliveryCount = 0
-    let newOrdersCount = 0
-    let deliveredTodayCount = 0
+    let totalPaidOrders = 0
+
+    // Status distributions
+    const statusCounts: Record<string, number> = {
+      new: 0,
+      confirmed: 0,
+      preparing: 0,
+      out_for_delivery: 0,
+      delivered: 0,
+      cancelled: 0,
+    }
+
+    const statusRevenue: Record<string, number> = {
+      new: 0,
+      confirmed: 0,
+      preparing: 0,
+      out_for_delivery: 0,
+      delivered: 0,
+      cancelled: 0,
+    }
 
     orders.forEach((order: any) => {
       const orderTotal = Number(order.total) || 0
       const orderTime = new Date(order.createdAt).getTime()
       const isToday = orderTime >= todayStart
+      const isLast30Days = orderTime >= thirtyDaysAgo
       const isPaid = order.paymentStatus !== 'pending' && order.paymentStatus !== 'refunded'
-      const isNotCancelled = order.orderStatus !== 'cancelled'
+      const status = order.orderStatus || 'new'
 
-      if (isNotCancelled) {
-        totalRevenue += orderTotal
+      if (statusCounts[status] !== undefined) {
+        statusCounts[status] += 1
+        statusRevenue[status] += orderTotal
       }
 
-      if (isToday && isNotCancelled) {
+      if (status !== 'cancelled') {
+        totalRevenue += orderTotal
+        if (isPaid) {
+          totalPaidOrders += 1
+        }
+      }
+
+      if (isToday && status !== 'cancelled') {
         todayOrdersCount += 1
         if (isPaid) {
           todayRevenue += orderTotal
         }
       }
 
-      if (order.orderStatus === 'preparing') {
-        bakingCount += 1
-      } else if (order.orderStatus === 'out_for_delivery') {
-        outForDeliveryCount += 1
-      } else if (order.orderStatus === 'new') {
-        newOrdersCount += 1
-      }
-
-      if (isToday && order.orderStatus === 'delivered') {
-        deliveredTodayCount += 1
+      if (isLast30Days && status !== 'cancelled') {
+        monthOrdersCount += 1
+        if (isPaid) {
+          monthRevenue += orderTotal
+        }
       }
     })
 
@@ -103,8 +126,37 @@ export async function GET() {
       })
     }
 
-    // Recent urgent/active orders (first 15)
-    const activeOrders = orders.slice(0, 15).map((o: any) => ({
+    // Last 30 days breakdown (grouped into 30 daily data points)
+    const last30Days: { date: string; dayName: string; revenue: number; ordersCount: number }[] = []
+    for (let i = 29; i >= 0; i--) {
+      const d = new Date()
+      d.setDate(d.getDate() - i)
+      const dayStart = new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime()
+      const dayEnd = dayStart + 24 * 60 * 60 * 1000
+
+      let dayRev = 0
+      let dayCount = 0
+
+      orders.forEach((order: any) => {
+        const orderTime = new Date(order.createdAt).getTime()
+        if (orderTime >= dayStart && orderTime < dayEnd && order.orderStatus !== 'cancelled') {
+          dayCount += 1
+          if (order.paymentStatus !== 'pending' && order.paymentStatus !== 'refunded') {
+            dayRev += Number(order.total) || 0
+          }
+        }
+      })
+
+      last30Days.push({
+        date: d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }),
+        dayName: dayNames[d.getDay()],
+        revenue: dayRev,
+        ordersCount: dayCount,
+      })
+    }
+
+    // Recent orders list (first 25)
+    const activeOrders = orders.slice(0, 25).map((o: any) => ({
       id: o.id,
       orderNumber: o.orderNumber,
       customerName: o.customerName,
@@ -115,6 +167,7 @@ export async function GET() {
       total: o.total,
       orderStatus: o.orderStatus,
       paymentStatus: o.paymentStatus,
+      paymentMethod: o.paymentMethod,
       createdAt: o.createdAt,
       itemsCount: Array.isArray(o.items) ? o.items.reduce((acc: number, it: any) => acc + (it.quantity || 1), 0) : 0,
       itemsSummary: Array.isArray(o.items)
@@ -128,14 +181,16 @@ export async function GET() {
       stats: {
         todayRevenue,
         todayOrdersCount,
+        monthRevenue,
+        monthOrdersCount,
         totalRevenue,
         totalOrders: orders.length,
-        bakingCount,
-        outForDeliveryCount,
-        newOrdersCount,
-        deliveredTodayCount,
+        totalPaidOrders,
+        statusCounts,
+        statusRevenue,
         soldOutProducts,
         last7Days,
+        last30Days,
         activeOrders,
       },
     })
