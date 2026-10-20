@@ -8,61 +8,117 @@
   --color-flavourite-dark-brown: #3E2723;
 }
 
-/* Sidebar Branding & Aesthetics */
-.nav {
-  border-right: 1px solid rgba(27, 94, 32, 0.12) !important;
+/* ==========================================================================
+   1. Modern Side Navigation (Replaces Default Underlined Hyperlinks)
+   ========================================================================== */
+.nav,
+aside.nav {
+  background-color: #FAFAFA !important;
+  border-right: 1px solid #E5E7EB !important;
+  font-family: inherit !important;
+}
+
+/* Remove all ugly browser underlines from links everywhere in the sidebar */
+.nav a,
+.nav a:link,
+.nav a:visited,
+.nav a:hover,
+.nav a:active,
+.nav a:focus,
+aside.nav a,
+.nav__link,
+.nav__link:hover,
+.nav-group__link,
+.nav-group__link:hover,
+.nav-group__toggle {
+  text-decoration: none !important;
+}
+
+/* Clean, modern rounded pill styling for all nav items */
+.nav a,
+aside.nav a,
+.nav__link,
+.nav-group__link {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;
+  padding: 8px 12px !important;
+  margin: 3px 8px !important;
+  border-radius: 8px !important;
+  color: #374151 !important;
+  font-size: 0.86rem !important;
+  font-weight: 500 !important;
+  transition: all 0.15s ease !important;
+}
+
+/* Hover state */
+.nav a:hover,
+aside.nav a:hover,
+.nav__link:hover,
+.nav-group__link:hover {
+  background-color: #F3F4F6 !important;
+  color: #1B5E20 !important;
+  transform: translateX(2px) !important;
+}
+
+/* Active / current route highlight */
+.nav a.active,
+.nav a[aria-current="page"],
+.nav__link--active,
+.nav-group__link--active {
+  background-color: #E8F5E9 !important;
+  color: #1B5E20 !important;
+  font-weight: 700 !important;
+  border-left: 3px solid #1B5E20 !important;
+}
+
+/* Group headings (e.g. "Bakery Kitchen", "Store Catalog") */
+.nav-group__label,
+.nav-group__toggle,
+.nav-group__title {
+  font-weight: 800 !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.06em !important;
+  text-transform: uppercase !important;
+  color: #6B7280 !important;
+  padding: 12px 14px 4px 14px !important;
+  margin-top: 0.5rem !important;
+  text-decoration: none !important;
 }
 
 /* Nav header brand touch */
 .nav__header {
-  padding: 1.25rem 1rem !important;
+  padding: 1rem 0.85rem 0.5rem 0.85rem !important;
 }
 
-/* Group headings */
-.nav-group__label {
-  font-weight: 700 !important;
-  font-size: 0.75rem !important;
-  letter-spacing: 0.05em !important;
-  text-transform: uppercase !important;
-  color: #1B5E20 !important;
-  margin-top: 1rem !important;
-}
-
-/* Nav link hover & active states */
-.nav__link:hover,
-.nav__link--active {
-  color: #1B5E20 !important;
-  font-weight: 600 !important;
-  border-radius: 8px !important;
-}
-
-/* Collection List Table Improvements */
+/* ==========================================================================
+   2. Collection List Table Improvements
+   ========================================================================== */
 .table {
   border-radius: 12px !important;
   overflow: hidden !important;
+  border: 1px solid #E5E7EB !important;
 }
 
 .table th {
   font-weight: 700 !important;
-  font-size: 0.8rem !important;
+  font-size: 0.78rem !important;
   text-transform: uppercase !important;
   letter-spacing: 0.04em !important;
   color: #374151 !important;
   background-color: #F9FAFB !important;
+  padding: 0.75rem 1rem !important;
 }
 
 .table td {
   vertical-align: middle !important;
   padding: 0.85rem 1rem !important;
+  font-size: 0.86rem !important;
 }
 
-/* Friendly Pill Badges in Table Cells */
-.cell-orderStatus,
-.cell-paymentStatus {
-  font-weight: 600 !important;
-}
-
-/* Buttons - Warm Forest Green Primary Accent */
+/* ==========================================================================
+   3. Buttons & Interactive Controls
+   ========================================================================== */
 .btn--style-primary {
   background-color: #1B5E20 !important;
   border-color: #1B5E20 !important;
@@ -78,7 +134,9 @@
   box-shadow: 0 4px 12px rgba(27, 94, 32, 0.25) !important;
 }
 
-/* Form field tabs styling */
+/* ==========================================================================
+   4. Form Field Tabs & Descriptions
+   ========================================================================== */
 .tabs-field__tab-button {
   font-weight: 600 !important;
   border-radius: 8px 8px 0 0 !important;
@@ -89,10 +147,16 @@
   border-bottom: 2px solid #1B5E20 !important;
 }
 
-/* Friendly Field Descriptions */
 .field-description {
   font-size: 0.82rem !important;
   color: #4B5563 !important;
   margin-top: 0.35rem !important;
   line-height: 1.4 !important;
+}
+
+/* Mobile responsive drawer adjustments */
+@media (max-width: 768px) {
+  .nav {
+    width: 280px !important;
+  }
 }
