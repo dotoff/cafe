@@ -9,7 +9,7 @@
 }
 
 /* ==========================================================================
-   1. Modern Side Navigation (Replaces Default Underlined Hyperlinks)
+   1. Modern Clean Side Navigation
    ========================================================================== */
 .nav,
 aside.nav {
@@ -18,77 +18,103 @@ aside.nav {
   font-family: inherit !important;
 }
 
-/* Remove all ugly browser underlines from links everywhere in the sidebar */
+/* Remove default browser underlines across all nav links and buttons */
 .nav a,
 .nav a:link,
 .nav a:visited,
 .nav a:hover,
 .nav a:active,
 .nav a:focus,
-aside.nav a,
 .nav__link,
 .nav__link:hover,
-.nav-group__link,
-.nav-group__link:hover,
-.nav-group__toggle {
+.nav-group__toggle,
+.nav-group__toggle:hover {
   text-decoration: none !important;
 }
 
-/* Clean, modern rounded pill styling for all nav items */
-.nav a,
-aside.nav a,
-.nav__link,
-.nav-group__link {
+/* Fix group toggles: Perfectly align group heading and chevron indicator vertically */
+.nav-group {
+  margin-bottom: 6px !important;
+}
+
+.nav-group__toggle {
   display: flex !important;
   align-items: center !important;
-  gap: 10px !important;
-  padding: 8px 12px !important;
-  margin: 3px 8px !important;
-  border-radius: 8px !important;
-  color: #374151 !important;
-  font-size: 0.86rem !important;
-  font-weight: 500 !important;
-  transition: all 0.15s ease !important;
+  justify-content: space-between !important;
+  padding: 6px 2px !important;
+  margin: 10px 0 2px 0 !important;
+  border: none !important;
+  background: transparent !important;
+  cursor: pointer !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
 }
 
-/* Hover state */
-.nav a:hover,
-aside.nav a:hover,
-.nav__link:hover,
-.nav-group__link:hover {
+.nav-group__label {
+  font-weight: 800 !important;
+  font-size: 0.72rem !important;
+  letter-spacing: 0.05em !important;
+  text-transform: uppercase !important;
+  color: #6B7280 !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  line-height: 1.2 !important;
+}
+
+.nav-group__indicator {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  color: #9CA3AF !important;
+  line-height: 1 !important;
+}
+
+.nav-group__indicator svg {
+  margin: 0 !important;
+  width: 14px !important;
+  height: 14px !important;
+}
+
+/* Clean, flush navigation links */
+.nav__link {
+  display: flex !important;
+  align-items: center !important;
+  padding: 7px 8px !important;
+  margin: 1px 0 !important;
+  border-radius: 6px !important;
+  color: #374151 !important;
+  font-size: 0.85rem !important;
+  font-weight: 500 !important;
+  transition: background-color 0.15s ease, color 0.15s ease !important;
+  text-decoration: none !important;
+  box-sizing: border-box !important;
+}
+
+.nav__link:hover {
   background-color: #F3F4F6 !important;
   color: #1B5E20 !important;
-  transform: translateX(2px) !important;
+  text-decoration: none !important;
 }
 
-/* Active / current route highlight */
+/* Clean active indicator (avoids floating detached bar) */
+.nav__link-indicator {
+  width: 3px !important;
+  height: 16px !important;
+  background-color: #1B5E20 !important;
+  border-radius: 2px !important;
+  margin-right: 6px !important;
+  flex-shrink: 0 !important;
+}
+
+/* Active route link state */
 .nav a.active,
 .nav a[aria-current="page"],
-.nav__link--active,
-.nav-group__link--active {
+.nav__link--active {
   background-color: #E8F5E9 !important;
   color: #1B5E20 !important;
   font-weight: 700 !important;
-  border-left: 3px solid #1B5E20 !important;
-}
-
-/* Group headings (e.g. "Bakery Kitchen", "Store Catalog") */
-.nav-group__label,
-.nav-group__toggle,
-.nav-group__title {
-  font-weight: 800 !important;
-  font-size: 0.72rem !important;
-  letter-spacing: 0.06em !important;
-  text-transform: uppercase !important;
-  color: #6B7280 !important;
-  padding: 12px 14px 4px 14px !important;
-  margin-top: 0.5rem !important;
-  text-decoration: none !important;
-}
-
-/* Nav header brand touch */
-.nav__header {
-  padding: 1rem 0.85rem 0.5rem 0.85rem !important;
 }
 
 /* ==========================================================================

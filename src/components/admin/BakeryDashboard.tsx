@@ -93,6 +93,24 @@ export function BakeryDashboard() {
     }
   }
 
+  const handleDispatchCourier = async (e: React.SyntheticEvent, orderId: string) => {
+    e.stopPropagation()
+    try {
+      setUpdatingOrderId(orderId)
+      await fetch('/api/admin/orders/quick-status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ orderId, newStatus: 'out_for_delivery' }),
+      })
+      router.push(`/admin/collections/orders/${orderId}#courier`)
+    } catch (err) {
+      console.error('Failed to dispatch order:', err)
+      router.push(`/admin/collections/orders/${orderId}#courier`)
+    } finally {
+      setUpdatingOrderId(null)
+    }
+  }
+
   const handleBackup = async () => {
     try {
       setBackingUp(true)
@@ -198,7 +216,7 @@ export function BakeryDashboard() {
   const getPaymentStatusBadge = (status: string, method?: string) => {
     switch (status) {
       case 'paid_razorpay':
-        return { label: '💳 Paid Online (Razorpay)', bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' }
+        return { label: '💳 Paid Online', bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' }
       case 'paid_upi':
         return { label: '📱 Paid (UPI / WhatsApp)', bg: '#DCFCE7', color: '#15803D', border: '#86EFAC' }
       case 'paid_cod':
@@ -1097,7 +1115,7 @@ export function BakeryDashboard() {
 
                       {currentStatus === 'preparing' && (
                         <button
-                          onClick={(e) => handleQuickStatus(e, order.id, 'out_for_delivery')}
+                          onClick={(e) => handleDispatchCourier(e, order.id)}
                           disabled={isUpdating}
                           style={{
                             background: '#2563EB',
@@ -1113,10 +1131,35 @@ export function BakeryDashboard() {
                             gap: '4px',
                             boxShadow: '0 1px 3px rgba(37, 99, 235, 0.25)',
                           }}
+                          title="Dispatch order and open Delivery & Courier tab to enter tracking code"
                         >
-                          <span>🛵 Dispatch Rider</span>
+                          <span>🛵 Dispatch & Courier Tab ↗</span>
                         </button>
                       )}
+
+                      {/* Dedicated Courier Tab Quick Link */}
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          router.push(`/admin/collections/orders/${order.id}#courier`)
+                        }}
+                        style={{
+                          background: '#FFFFFF',
+                          color: '#1E40AF',
+                          border: '1px solid #BFDBFE',
+                          borderRadius: '7px',
+                          padding: '5px 8px',
+                          fontSize: '0.74rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '3px',
+                        }}
+                        title="Open Delivery & Courier details tab for this order"
+                      >
+                        <span>🚚 Courier Tab</span>
+                      </button>
 
                       {currentStatus === 'out_for_delivery' && (
                         <button

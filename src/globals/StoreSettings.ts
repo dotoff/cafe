@@ -5,7 +5,7 @@ export const StoreSettings: GlobalConfig = {
   label: '⚙️ Store & Payment Settings',
   admin: {
     group: 'Storefront',
-    description: 'Configure store contact details, announcement bar, Razorpay keys, and Shiprocket credentials.',
+    description: 'Configure store contact details, announcement bar, online payment gateway, and delivery partner settings.',
   },
   access: {
     read: () => true,
@@ -47,12 +47,12 @@ export const StoreSettings: GlobalConfig = {
             {
               name: 'razorpayKeyId',
               type: 'text',
-              admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...).' }
+              admin: { description: 'Payment Gateway Key ID (Public API Key for online payments).' }
             },
             {
               name: 'razorpayKeySecret',
               type: 'text',
-              admin: { description: 'Razorpay Key Secret (found in Razorpay Dashboard -> Account & Settings -> API Keys).' }
+              admin: { description: 'Payment Gateway Key Secret (Private API Secret Key).' }
             },
             { 
               name: 'taxRate', 
@@ -121,28 +121,28 @@ export const StoreSettings: GlobalConfig = {
           ],
         },
         {
-          label: '🚚 Shiprocket Logistics',
+          label: '🚚 Delivery & Courier Partner',
           fields: [
             {
               name: 'shiprocketAutoPush',
               type: 'checkbox',
               defaultValue: true,
               admin: {
-                description: 'Automatically push every paid order to Shiprocket immediately upon payment verification.',
+                description: 'Automatically push every paid order to delivery partner immediately upon payment verification.',
               },
             },
             {
               name: 'shiprocketEmail',
               type: 'text',
               admin: {
-                description: 'Shiprocket API User Email (from Shiprocket -> Settings -> API -> Add User).',
+                description: 'Courier Partner API User Email / Client ID.',
               },
             },
             {
               name: 'shiprocketPassword',
               type: 'text',
               admin: {
-                description: 'Shiprocket API User Password.',
+                description: 'Courier Partner API User Password / Secret.',
               },
             },
             {
@@ -150,7 +150,7 @@ export const StoreSettings: GlobalConfig = {
               type: 'text',
               defaultValue: 'Primary',
               admin: {
-                description: 'Pickup Location name configured in your Shiprocket account.',
+                description: 'Kitchen Pickup Location name registered with delivery partner.',
               },
             },
             {

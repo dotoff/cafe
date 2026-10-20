@@ -1,6 +1,6 @@
 'use client'
 
-import React from 'react'
+import React, { useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { LayoutDashboard, ExternalLink, Store } from 'lucide-react'
@@ -9,15 +9,41 @@ export function AdminNavHeader() {
   const pathname = usePathname()
   const isDashboard = pathname === '/admin' || pathname === '/admin/'
 
+  // When an order is opened with #courier, automatically switch to the Delivery & Courier tab
+  useEffect(() => {
+    const handleHash = () => {
+      if (typeof window !== 'undefined' && window.location.hash.toLowerCase().includes('courier')) {
+        setTimeout(() => {
+          const tabButtons = Array.from(document.querySelectorAll('.tabs-field__tab-button'))
+          const courierTab = tabButtons.find((btn) => {
+            const text = btn.textContent?.toLowerCase() || ''
+            return text.includes('courier') || text.includes('delivery')
+          }) as HTMLButtonElement | undefined
+
+          if (courierTab && !courierTab.classList.contains('tabs-field__tab-button--active')) {
+            courierTab.click()
+            // Smoothly scroll tab into view if needed
+            courierTab.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+          }
+        }, 250)
+      }
+    }
+
+    handleHash()
+    window.addEventListener('hashchange', handleHash)
+    return () => window.removeEventListener('hashchange', handleHash)
+  }, [pathname])
+
   return (
     <div
       style={{
-        padding: '0 0.75rem 0.85rem 0.75rem',
-        marginBottom: '0.75rem',
+        padding: '0 0 10px 0',
+        margin: '0 0 10px 0',
         borderBottom: '1px solid #E5E7EB',
         display: 'flex',
         flexDirection: 'column',
-        gap: '8px',
+        gap: '6px',
+        width: '100%',
       }}
     >
       {/* Brand Header */}
@@ -25,37 +51,22 @@ export function AdminNavHeader() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          padding: '10px 12px',
+          gap: '8px',
+          padding: '8px 10px',
           marginBottom: '2px',
-          background: 'linear-gradient(135deg, #1B5E20 0%, #2E7D32 100%)',
-          borderRadius: '10px',
-          color: '#FFFFFF',
-          boxShadow: '0 2px 4px rgba(27, 94, 32, 0.15)',
+          background: '#F0FDF4',
+          border: '1px solid #DCFCE7',
+          borderRadius: '8px',
         }}
       >
-        <div
-          style={{
-            width: '30px',
-            height: '30px',
-            borderRadius: '8px',
-            background: 'rgba(255, 255, 255, 0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontSize: '1.1rem',
-            flexShrink: 0,
-          }}
-        >
-          🧁
-        </div>
+        <span style={{ fontSize: '1.1rem', lineHeight: 1 }}>🧁</span>
         <div style={{ flex: 1, minWidth: 0 }}>
           <div
             style={{
-              fontSize: '0.85rem',
+              fontSize: '0.84rem',
               fontWeight: 800,
               lineHeight: 1.2,
-              letterSpacing: '-0.01em',
+              color: '#166534',
               whiteSpace: 'nowrap',
               overflow: 'hidden',
               textOverflow: 'ellipsis',
@@ -63,7 +74,7 @@ export function AdminNavHeader() {
           >
             Flavourite Bakery
           </div>
-          <div style={{ fontSize: '0.68rem', color: '#C8E6C9', fontWeight: 600 }}>
+          <div style={{ fontSize: '0.67rem', color: '#15803D', fontWeight: 600 }}>
             📍 Samalkot Kitchen
           </div>
         </div>
@@ -75,19 +86,20 @@ export function AdminNavHeader() {
         style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          padding: '9px 12px',
-          borderRadius: '8px',
-          fontSize: '0.85rem',
+          gap: '8px',
+          padding: '8px 10px',
+          borderRadius: '6px',
+          fontSize: '0.84rem',
           fontWeight: 700,
           textDecoration: 'none',
           transition: 'all 0.15s ease',
-          background: isDashboard ? '#1B5E20' : '#F3F4F6',
-          color: isDashboard ? '#FFFFFF' : '#1F2937',
-          boxShadow: isDashboard ? '0 2px 6px rgba(27, 94, 32, 0.25)' : 'none',
+          background: isDashboard ? '#1B5E20' : '#FFFFFF',
+          color: isDashboard ? '#FFFFFF' : '#374151',
+          border: isDashboard ? '1px solid #1B5E20' : '1px solid #E5E7EB',
+          boxShadow: isDashboard ? '0 1px 3px rgba(27, 94, 32, 0.2)' : 'none',
         }}
       >
-        <LayoutDashboard size={17} color={isDashboard ? '#FFFFFF' : '#1B5E20'} />
+        <LayoutDashboard size={15} color={isDashboard ? '#FFFFFF' : '#1B5E20'} />
         <span>Bakery Dashboard</span>
       </Link>
 
@@ -100,8 +112,8 @@ export function AdminNavHeader() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          padding: '8px 12px',
-          borderRadius: '8px',
+          padding: '7px 10px',
+          borderRadius: '6px',
           fontSize: '0.78rem',
           fontWeight: 600,
           textDecoration: 'none',
@@ -111,7 +123,7 @@ export function AdminNavHeader() {
           transition: 'all 0.15s ease',
         }}
       >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
           <Store size={14} color="#1B5E20" />
           <span>Live Customer Store</span>
         </div>

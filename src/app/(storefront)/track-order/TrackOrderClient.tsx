@@ -177,13 +177,13 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
               </div>
             </div>
 
-            {/* Shiprocket Courier & AWB Tracking Info */}
+            {/* Courier & AWB Tracking Info */}
             {(order.awbCode || order.shiprocketOrderId || order.courierName) && (
               <div className="bg-emerald-50/70 border border-emerald-200 rounded-2xl p-4 mb-6 text-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <p className="text-xs uppercase font-bold text-emerald-700 mb-1 flex items-center gap-1.5">
-                      <span>🚚</span> Shiprocket Courier Dispatch
+                      <span>🚚</span> Courier Delivery Dispatch
                     </p>
                     <p className="text-xs text-gray-700">
                       {order.courierName ? (
@@ -191,17 +191,17 @@ export default function TrackOrderClient({ settings }: { settings: any }) {
                           Courier Partner: <strong className="text-gray-900">{order.courierName}</strong>
                         </>
                       ) : (
-                        'Order synced with Shiprocket Logistics'
+                        'Order assigned to delivery partner'
                       )}
                       {order.awbCode && (
                         <>
-                          {' '}• AWB: <strong className="font-mono text-gray-900">{order.awbCode}</strong>
+                          {' '}• Tracking Code: <strong className="font-mono text-gray-900">{order.awbCode}</strong>
                         </>
                       )}
                     </p>
                     {order.shiprocketStatus && (
                       <p className="text-[11px] text-emerald-800 mt-1 font-medium">
-                        Status: {order.shiprocketStatus}
+                        Courier Status: {order.shiprocketStatus}
                       </p>
                     )}
                   </div>

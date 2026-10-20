@@ -73,7 +73,7 @@ export const Orders: CollectionConfig = {
           defaultValue: 'pending',
           options: [
             { label: '⏳ Pending Payment', value: 'pending' },
-            { label: '💳 Paid (Razorpay Online)', value: 'paid_razorpay' },
+            { label: '💳 Paid (Online Payment)', value: 'paid_razorpay' },
             { label: '📱 Paid (UPI / WhatsApp)', value: 'paid_upi' },
             { label: '💵 Cash on Delivery', value: 'paid_cod' },
             { label: '↩️ Refunded', value: 'refunded' },
@@ -229,7 +229,7 @@ export const Orders: CollectionConfig = {
               type: 'select',
               defaultValue: 'razorpay',
               options: [
-                { label: 'Razorpay Online (UPI/Cards/Netbanking)', value: 'razorpay' },
+                { label: 'Online Payment (UPI / Cards / Netbanking)', value: 'razorpay' },
                 { label: 'Cash on Delivery', value: 'cod' },
                 { label: 'Direct UPI / WhatsApp', value: 'upi_whatsapp' },
               ],
@@ -242,7 +242,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Razorpay Order ID',
+                    description: 'Online Payment Order / Reference ID',
                   },
                 },
                 {
@@ -250,7 +250,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Razorpay Payment Receipt ID',
+                    description: 'Payment Receipt / Reference ID',
                   },
                 },
               ],
@@ -258,8 +258,8 @@ export const Orders: CollectionConfig = {
           ],
         },
         {
-          label: '🚚 Courier & Shiprocket',
-          description: 'Shiprocket logistics and live AWB tracking info.',
+          label: '🚚 Delivery & Courier',
+          description: 'Courier partner dispatch, driver tracking, and delivery status.',
           fields: [
             {
               type: 'row',
@@ -297,7 +297,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '33%',
-                    description: 'Shiprocket Order ID',
+                    description: 'Courier Reference / Order ID',
                   },
                 },
                 {
@@ -305,7 +305,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '33%',
-                    description: 'Shipment ID',
+                    description: 'Courier Shipment ID',
                   },
                 },
                 {
@@ -313,7 +313,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '34%',
-                    description: 'Courier Sync Status',
+                    description: 'Delivery Partner Status',
                   },
                 },
               ],
