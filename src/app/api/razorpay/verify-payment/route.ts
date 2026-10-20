@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { getPayload } from 'payload'
 import configPromise from '@payload-config'
 import { pushOrderToShiprocket, getShiprocketSettings } from '@/lib/shiprocket'
+import { sendOrderConfirmationEmails } from '@/lib/email'
 
 export async function POST(req: Request) {
   try {
@@ -168,6 +169,19 @@ export async function POST(req: Request) {
       }
     } catch (srErr) {
       console.error('Non-fatal Shiprocket auto-push error:', srErr)
+    }
+
+    // Automated Email Notifications (Customer invoice & Kitchen staff alert)
+    try {
+      const storeSettings: any = await payload.findGlobal({ slug: 'store-settings' })
+      if (storeSettings && storeSettings.enableOrderEmails !== false) {
+        await sendOrderConfirmationEmails({
+          order: finalOrder,
+          settings: storeSettings,
+        })
+      }
+    } catch (emailErr) {
+      console.error('Non-fatal order confirmation email error:', emailErr)
     }
 
     return NextResponse.json({

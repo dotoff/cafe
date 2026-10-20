@@ -22,12 +22,15 @@ import {
   Search,
   DollarSign,
   ArrowUpRight,
+  Database,
 } from 'lucide-react'
 
 export function BakeryDashboard() {
   const router = useRouter()
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
+  const [backingUp, setBackingUp] = useState(false)
+  const [backupSuccess, setBackupSuccess] = useState<string | null>(null)
   const [stats, setStats] = useState<any>(null)
   const [error, setError] = useState<string | null>(null)
 
@@ -80,6 +83,26 @@ export function BakeryDashboard() {
       console.error('Status update failed:', err)
     } finally {
       setUpdatingOrderId(null)
+    }
+  }
+
+  const handleBackup = async () => {
+    try {
+      setBackingUp(true)
+      setBackupSuccess(null)
+      const res = await fetch('/api/admin/backup', { method: 'POST' })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setBackupSuccess(`Database snapshot saved (${data.sizeKb} KB)`)
+        setTimeout(() => setBackupSuccess(null), 5000)
+      } else {
+        alert(data.error || 'Backup failed')
+      }
+    } catch (err) {
+      console.error('Backup error:', err)
+      alert('Failed to trigger database backup')
+    } finally {
+      setBackingUp(false)
     }
   }
 
@@ -1150,6 +1173,27 @@ export function BakeryDashboard() {
           <FileText size={16} color="#C8A951" />
           <span>Store Settings & Banner</span>
         </Link>
+
+        <button
+          onClick={handleBackup}
+          disabled={backingUp}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            background: backupSuccess ? '#DCFCE7' : '#FFFFFF',
+            border: backupSuccess ? '1px solid #86EFAC' : '1px solid #E5E7EB',
+            borderRadius: '10px',
+            padding: '10px 14px',
+            color: backupSuccess ? '#15803D' : '#374151',
+            fontWeight: 700,
+            fontSize: '0.82rem',
+            cursor: 'pointer',
+          }}
+        >
+          <Database size={16} color={backupSuccess ? '#15803D' : '#4B5563'} />
+          <span>{backingUp ? 'Backing up...' : backupSuccess || 'Backup Database'}</span>
+        </button>
 
         <Link
           href="/"

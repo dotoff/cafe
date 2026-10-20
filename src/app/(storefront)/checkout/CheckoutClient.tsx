@@ -37,6 +37,13 @@ export default function CheckoutClient({ settings }: { settings: any }) {
   const shipping = subtotal >= freeThreshold ? 0 : flatShipping
   const total = subtotal + tax + shipping
 
+  const todayStr = new Date().toISOString().split('T')[0]
+  const isSelectedToday = !formData.deliveryDate || formData.deliveryDate === todayStr
+  const currentHour = new Date().getHours()
+  const isMorningClosed = isSelectedToday && currentHour >= 11
+  const isAfternoonClosed = isSelectedToday && currentHour >= 15
+  const isEveningClosed = isSelectedToday && currentHour >= 19
+
   const hasRazorpayKey = Boolean(settings?.razorpayKeyId) || Boolean(process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID)
 
   const loadRazorpayScript = () => {
@@ -77,6 +84,24 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     if (!formData.pincode.trim() || formData.pincode.length < 6) {
       setError('Please enter a valid 6-digit pincode')
       return
+    }
+
+    // Hyderabad Serviceable Pincode Validation
+    const restrictPincodes = settings?.restrictPincodes !== false
+    const allowedPrefixes = (settings?.serviceablePincodePrefixes || '500')
+      .split(',')
+      .map((p: string) => p.trim())
+      .filter(Boolean)
+
+    if (restrictPincodes) {
+      const enteredPin = formData.pincode.trim()
+      const isServiceable = allowedPrefixes.some((prefix: string) => enteredPin.startsWith(prefix))
+      if (!isServiceable) {
+        setError(
+          'Fresh bakery delivery is currently only available within Hyderabad & Secunderabad (pincodes starting with 500xxx). For bulk, custom cakes, or special event orders, please contact us directly on WhatsApp.'
+        )
+        return
+      }
     }
 
     setLoading(true)
@@ -351,6 +376,9 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       placeholder="500034"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
+                    <p className="text-[11px] text-gray-500 mt-1">
+                      📍 Fresh delivery across Hyderabad & Secunderabad (500xxx)
+                    </p>
                   </div>
                 </div>
 
@@ -410,9 +438,15 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm bg-white"
                     >
                       <option value="asap">⚡ ASAP / Standard Delivery</option>
-                      <option value="morning">🌅 Morning (10:00 AM - 1:00 PM)</option>
-                      <option value="afternoon">☀️ Afternoon (1:00 PM - 5:00 PM)</option>
-                      <option value="evening">🌙 Evening (5:00 PM - 9:00 PM)</option>
+                      <option value="morning" disabled={isMorningClosed}>
+                        🌅 Morning (10:00 AM - 1:00 PM) {isMorningClosed ? '• Closed for Today' : ''}
+                      </option>
+                      <option value="afternoon" disabled={isAfternoonClosed}>
+                        ☀️ Afternoon (1:00 PM - 5:00 PM) {isAfternoonClosed ? '• Closed for Today' : ''}
+                      </option>
+                      <option value="evening" disabled={isEveningClosed}>
+                        🌙 Evening (5:00 PM - 9:00 PM) {isEveningClosed ? '• Closed for Today' : ''}
+                      </option>
                     </select>
                   </div>
                 </div>

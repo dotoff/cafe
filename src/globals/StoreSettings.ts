@@ -72,6 +72,52 @@ export const StoreSettings: GlobalConfig = {
               defaultValue: 500,
               admin: { description: 'Minimum order amount in ₹ for free delivery (e.g. 500).' }
             },
+            {
+              name: 'restrictPincodes',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: { description: 'Restrict local bakery delivery to serviceable Hyderabad pincodes.' }
+            },
+            {
+              name: 'serviceablePincodePrefixes',
+              type: 'text',
+              defaultValue: '500',
+              admin: { description: 'Allowed pincode prefixes (e.g. 500 for Hyderabad & Secunderabad) or comma-separated list of pincodes.' }
+            },
+            {
+              name: 'sameDayCutoffHour',
+              type: 'number',
+              defaultValue: 18,
+              admin: { description: 'Cutoff hour for same-day delivery (24h format, e.g. 18 for 6:00 PM). Past this hour, same-day delivery is restricted to next-day.' }
+            },
+          ],
+        },
+        {
+          label: '✉️ Automated Email Notifications (Free)',
+          fields: [
+            {
+              name: 'enableOrderEmails',
+              type: 'checkbox',
+              defaultValue: true,
+              admin: { description: 'Automatically send HTML order confirmation emails to customers and store staff.' }
+            },
+            {
+              name: 'resendApiKey',
+              type: 'text',
+              admin: { description: 'Optional: Resend API Key (re_...) from resend.com for 3,000 free emails/month. Leave blank to log to console.' }
+            },
+            {
+              name: 'fromEmail',
+              type: 'text',
+              defaultValue: 'Flavourite Bakery <onboarding@resend.dev>',
+              admin: { description: 'Sender email address (e.g. orders@flavouritefood.com or onboarding@resend.dev)' }
+            },
+            {
+              name: 'staffNotificationEmail',
+              type: 'text',
+              defaultValue: 'flavouritefood@gmail.com',
+              admin: { description: 'Bakery kitchen email to receive new order alerts.' }
+            },
           ],
         },
         {

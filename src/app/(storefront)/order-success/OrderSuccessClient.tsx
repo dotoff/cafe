@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { CheckCircle2, Receipt, ArrowRight, PackageCheck } from 'lucide-react'
+import { CheckCircle2, Receipt, ArrowRight, PackageCheck, MessageCircle } from 'lucide-react'
 
 export default function OrderSuccessClient({
   order: initialOrder,
@@ -211,6 +211,19 @@ export default function OrderSuccessClient({
             <span>Track Live Order Status</span>
             <ArrowRight size={18} />
           </Link>
+
+          {/* Instant WhatsApp Updates (Free Direct Connection) */}
+          <a
+            href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+              `Hi ${storeName}! 🧁 I just placed order #${order.orderNumber} for ${order.customerName} (₹${order.total}). Please send me live baking and delivery updates here!`
+            )}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full mt-3 bg-[#25D366] hover:bg-[#1EBE5D] text-white py-3.5 px-6 rounded-2xl font-bold flex items-center justify-center gap-2.5 transition-all shadow-sm text-center text-sm"
+          >
+            <MessageCircle size={20} />
+            <span>Get Live Updates on WhatsApp</span>
+          </a>
         </div>
 
         {/* Order Receipt Details */}
