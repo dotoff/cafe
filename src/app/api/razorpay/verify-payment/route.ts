@@ -122,8 +122,8 @@ export async function POST(req: Request) {
         collection: 'orders',
         data: {
           ...baseOrderData,
-          city: city || 'Hyderabad',
-          state: state || 'Telangana',
+          city: city || 'Samalkot',
+          state: state || 'Andhra Pradesh',
         },
       })
     } catch (createErr) {
@@ -141,8 +141,8 @@ export async function POST(req: Request) {
     const finalOrder = order || {
       id: orderNumber,
       ...baseOrderData,
-      city: city || 'Hyderabad',
-      state: state || 'Telangana',
+      city: city || 'Samalkot',
+      state: state || 'Andhra Pradesh',
       createdAt: now.toISOString(),
     }
 

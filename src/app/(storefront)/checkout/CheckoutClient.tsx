@@ -20,8 +20,8 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     customerEmail: '',
     deliveryAddress: '',
     landmark: '',
-    city: 'Hyderabad',
-    state: 'Telangana',
+    city: 'Samalkot',
+    state: 'Andhra Pradesh',
     pincode: '',
     deliveryDate: '',
     deliverySlot: 'asap',
@@ -86,9 +86,9 @@ export default function CheckoutClient({ settings }: { settings: any }) {
       return
     }
 
-    // Hyderabad Serviceable Pincode Validation
+    // Samalkot & Regional Serviceable Pincode Validation
     const restrictPincodes = settings?.restrictPincodes !== false
-    const allowedPrefixes = (settings?.serviceablePincodePrefixes || '500')
+    const allowedPrefixes = (settings?.serviceablePincodePrefixes || '533')
       .split(',')
       .map((p: string) => p.trim())
       .filter(Boolean)
@@ -98,7 +98,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
       const isServiceable = allowedPrefixes.some((prefix: string) => enteredPin.startsWith(prefix))
       if (!isServiceable) {
         setError(
-          'Fresh bakery delivery is currently only available within Hyderabad & Secunderabad (pincodes starting with 500xxx). For bulk, custom cakes, or special event orders, please contact us directly on WhatsApp.'
+          'Fresh bakery delivery is currently only available within Samalkot, Kakinada, and nearby areas (pincodes starting with 533xxx). For bulk orders, custom celebration cakes, or outstation courier, please contact us on WhatsApp.'
         )
         return
       }
@@ -373,11 +373,11 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       maxLength={6}
                       value={formData.pincode}
                       onChange={handleChange}
-                      placeholder="500034"
+                      placeholder="533440"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                     <p className="text-[11px] text-gray-500 mt-1">
-                      📍 Fresh delivery across Hyderabad & Secunderabad (500xxx)
+                      📍 Fresh bakery delivery across Samalkot, Kakinada & nearby (533xxx)
                     </p>
                   </div>
                 </div>
@@ -393,7 +393,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       required
                       value={formData.city}
                       onChange={handleChange}
-                      placeholder="Hyderabad"
+                      placeholder="Samalkot"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>
@@ -407,7 +407,7 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                       required
                       value={formData.state}
                       onChange={handleChange}
-                      placeholder="Telangana"
+                      placeholder="Andhra Pradesh"
                       className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-brand-dark focus:ring-1 focus:ring-brand-dark outline-none text-sm"
                     />
                   </div>

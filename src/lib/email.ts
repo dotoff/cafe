@@ -44,7 +44,7 @@ export async function sendOrderConfirmationEmails({ order, settings }: SendOrder
           <!-- Header -->
           <div style="background: #1B5E20; padding: 32px 24px; text-align: center; color: #ffffff;">
             <h1 style="margin: 0; font-size: 26px; font-family: Georgia, serif; letter-spacing: 0.5px;">Flavourite Cafe & Bakery</h1>
-            <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Freshly Baked with Love in Hyderabad</p>
+            <p style="margin: 8px 0 0 0; font-size: 14px; opacity: 0.9;">Freshly Baked with Love in Samalkot, Andhra Pradesh</p>
           </div>
 
           <!-- Body -->
@@ -62,7 +62,7 @@ export async function sendOrderConfirmationEmails({ order, settings }: SendOrder
               <h3 style="margin: 0 0 8px 0; font-size: 14px; text-transform: uppercase; color: #1B5E20; letter-spacing: 0.05em;">Delivery Information</h3>
               <p style="margin: 4px 0; font-size: 14px;"><strong>Address:</strong> ${order.deliveryAddress}</p>
               ${order.landmark ? `<p style="margin: 4px 0; font-size: 14px;"><strong>Landmark:</strong> ${order.landmark}</p>` : ''}
-              <p style="margin: 4px 0; font-size: 14px;"><strong>Pincode:</strong> ${order.pincode} (${order.city || 'Hyderabad'})</p>
+              <p style="margin: 4px 0; font-size: 14px;"><strong>Pincode:</strong> ${order.pincode} (${order.city || 'Samalkot'})</p>
               <p style="margin: 4px 0; font-size: 14px;"><strong>Time Slot:</strong> ${order.deliverySlot?.toUpperCase() || 'ASAP'}</p>
               ${order.specialInstructions ? `<p style="margin: 8px 0 0 0; font-size: 13px; color: #854d0e; background: #fef9c3; padding: 6px 10px; border-radius: 6px;"><strong>Note:</strong> "${order.specialInstructions}"</p>` : ''}
             </div>
@@ -108,7 +108,7 @@ export async function sendOrderConfirmationEmails({ order, settings }: SendOrder
 
           <!-- Footer -->
           <div style="background: #f9fafb; padding: 20px 24px; text-align: center; font-size: 12px; color: #9ca3af; border-top: 1px solid #f3f4f6;">
-            <p style="margin: 0;">Flavourite Cafe & Bakery • Banjara Hills, Hyderabad • Call/WhatsApp: +91 70132 05977</p>
+            <p style="margin: 0;">Flavourite Cafe & Bakery • Main Road, Samalkot, Kakinada District, AP • Call/WhatsApp: +91 70132 05977</p>
           </div>
         </div>
       </body>

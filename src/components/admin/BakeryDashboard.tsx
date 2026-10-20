@@ -42,6 +42,10 @@ export function BakeryDashboard() {
   const [searchQuery, setSearchQuery] = useState('')
   const [updatingOrderId, setUpdatingOrderId] = useState<string | null>(null)
 
+  const toggleFilter = (status: string) => {
+    setOrderFilter((prev) => (prev === status ? 'all' : status))
+  }
+
   const fetchStats = async () => {
     try {
       setRefreshing(true)
@@ -363,12 +367,12 @@ export function BakeryDashboard() {
 
         {/* Metric 2: New Orders (Clickable Filter) */}
         <div
-          onClick={() => setOrderFilter('new')}
+          onClick={() => toggleFilter('new')}
           style={{
-            background: '#FFFFFF',
+            background: orderFilter === 'new' ? '#FEF3C7' : '#FFFFFF',
             borderRadius: '16px',
             padding: '1.25rem',
-            border: orderFilter === 'new' ? '2px solid #F59E0B' : '1px solid #E5E7EB',
+            border: orderFilter === 'new' ? '2px solid #D97706' : '1px solid #E5E7EB',
             boxShadow: '0 1px 2px rgba(0,0,0,0.03)',
             cursor: 'pointer',
             transition: 'all 0.2s',
@@ -378,23 +382,23 @@ export function BakeryDashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#B45309', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               New Orders
             </span>
-            <span style={{ background: '#FEF3C7', color: '#B45309', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-              Action Req.
+            <span style={{ background: orderFilter === 'new' ? '#F59E0B' : '#FEF3C7', color: orderFilter === 'new' ? '#FFFFFF' : '#B45309', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
+              {orderFilter === 'new' ? 'Filter Active ✕' : 'Action Req.'}
             </span>
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#B45309', margin: '4px 0' }}>
             {statusCounts.new || 0}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#6B7280' }}>
-            Click to filter queue below
+          <div style={{ fontSize: '0.78rem', color: orderFilter === 'new' ? '#92400E' : '#6B7280', fontWeight: orderFilter === 'new' ? 700 : 400 }}>
+            {orderFilter === 'new' ? 'Click to show all orders' : 'Click to filter queue below'}
           </div>
         </div>
 
         {/* Metric 3: In Kitchen / Preparing */}
         <div
-          onClick={() => setOrderFilter('preparing')}
+          onClick={() => toggleFilter('preparing')}
           style={{
-            background: '#FFFFFF',
+            background: orderFilter === 'preparing' ? '#FFEDD5' : '#FFFFFF',
             borderRadius: '16px',
             padding: '1.25rem',
             border: orderFilter === 'preparing' ? '2px solid #EA580C' : '1px solid #E5E7EB',
@@ -407,23 +411,23 @@ export function BakeryDashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#C2410C', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               In Kitchen
             </span>
-            <span style={{ background: '#FFEDD5', color: '#C2410C', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-              Preparing
+            <span style={{ background: orderFilter === 'preparing' ? '#EA580C' : '#FFEDD5', color: orderFilter === 'preparing' ? '#FFFFFF' : '#C2410C', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
+              {orderFilter === 'preparing' ? 'Filter Active ✕' : 'Preparing'}
             </span>
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#C2410C', margin: '4px 0' }}>
             {statusCounts.preparing || 0}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#6B7280' }}>
-            Currently in production
+          <div style={{ fontSize: '0.78rem', color: orderFilter === 'preparing' ? '#9A3412' : '#6B7280', fontWeight: orderFilter === 'preparing' ? 700 : 400 }}>
+            {orderFilter === 'preparing' ? 'Click to show all orders' : 'Currently in production'}
           </div>
         </div>
 
         {/* Metric 4: Out for Delivery */}
         <div
-          onClick={() => setOrderFilter('out_for_delivery')}
+          onClick={() => toggleFilter('out_for_delivery')}
           style={{
-            background: '#FFFFFF',
+            background: orderFilter === 'out_for_delivery' ? '#DBEAFE' : '#FFFFFF',
             borderRadius: '16px',
             padding: '1.25rem',
             border: orderFilter === 'out_for_delivery' ? '2px solid #2563EB' : '1px solid #E5E7EB',
@@ -436,23 +440,23 @@ export function BakeryDashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#1D4ED8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Out for Delivery
             </span>
-            <span style={{ background: '#DBEAFE', color: '#1D4ED8', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-              In Transit
+            <span style={{ background: orderFilter === 'out_for_delivery' ? '#2563EB' : '#DBEAFE', color: orderFilter === 'out_for_delivery' ? '#FFFFFF' : '#1D4ED8', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
+              {orderFilter === 'out_for_delivery' ? 'Filter Active ✕' : 'In Transit'}
             </span>
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#1D4ED8', margin: '4px 0' }}>
             {statusCounts.out_for_delivery || 0}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#6B7280' }}>
-            Dispatched with rider / courier
+          <div style={{ fontSize: '0.78rem', color: orderFilter === 'out_for_delivery' ? '#1E40AF' : '#6B7280', fontWeight: orderFilter === 'out_for_delivery' ? 700 : 400 }}>
+            {orderFilter === 'out_for_delivery' ? 'Click to show all orders' : 'Dispatched with rider / courier'}
           </div>
         </div>
 
         {/* Metric 5: Completed / Delivered */}
         <div
-          onClick={() => setOrderFilter('delivered')}
+          onClick={() => toggleFilter('delivered')}
           style={{
-            background: '#FFFFFF',
+            background: orderFilter === 'delivered' ? '#DCFCE7' : '#FFFFFF',
             borderRadius: '16px',
             padding: '1.25rem',
             border: orderFilter === 'delivered' ? '2px solid #16A34A' : '1px solid #E5E7EB',
@@ -465,15 +469,15 @@ export function BakeryDashboard() {
             <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#15803D', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
               Completed
             </span>
-            <span style={{ background: '#DCFCE7', color: '#15803D', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
-              Delivered
+            <span style={{ background: orderFilter === 'delivered' ? '#16A34A' : '#DCFCE7', color: orderFilter === 'delivered' ? '#FFFFFF' : '#15803D', padding: '3px 8px', borderRadius: '6px', fontSize: '0.7rem', fontWeight: 700 }}>
+              {orderFilter === 'delivered' ? 'Filter Active ✕' : 'Delivered'}
             </span>
           </div>
           <div style={{ fontSize: '1.75rem', fontWeight: 800, color: '#15803D', margin: '4px 0' }}>
             {statusCounts.delivered || 0}
           </div>
-          <div style={{ fontSize: '0.78rem', color: '#6B7280' }}>
-            {Math.round(((statusCounts.delivered || 0) / totalStatusOrders) * 100)}% fulfillment rate
+          <div style={{ fontSize: '0.78rem', color: orderFilter === 'delivered' ? '#14532D' : '#6B7280', fontWeight: orderFilter === 'delivered' ? 700 : 400 }}>
+            {orderFilter === 'delivered' ? 'Click to show all orders' : `${Math.round(((statusCounts.delivered || 0) / totalStatusOrders) * 100)}% fulfillment rate`}
           </div>
         </div>
       </div>
@@ -809,6 +813,27 @@ export function BakeryDashboard() {
           </div>
 
           <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '8px' }}>
+            {orderFilter !== 'all' && (
+              <button
+                onClick={() => setOrderFilter('all')}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  background: '#FEF2F2',
+                  color: '#B91C1C',
+                  border: '1px solid #FECACA',
+                  borderRadius: '8px',
+                  padding: '5px 10px',
+                  fontSize: '0.74rem',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                }}
+              >
+                <span>Filtered: {orderFilter.replace('_', ' ').toUpperCase()} (Click to View All ✕)</span>
+              </button>
+            )}
+
             {/* Search Input */}
             <div style={{ position: 'relative' }}>
               <Search size={14} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: '#9CA3AF' }} />

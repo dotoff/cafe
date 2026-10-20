@@ -47,7 +47,7 @@ export default function ContactPage() {
                 <div className="text-3xl">📍</div>
                 <div>
                   <h4 className="font-bold text-gray-900 mb-1">Visit Us</h4>
-                  <p className="text-gray-500 text-sm">Flavourite Food & Beverage<br/>Shop No. 12, Jubilee Hills Road 36<br/>Hyderabad, Telangana 500033</p>
+                  <p className="text-gray-500 text-sm">Flavourite Food & Beverage<br/>Main Road, Samalkot<br/>Kakinada District, Andhra Pradesh 533440</p>
                 </div>
               </div>
               

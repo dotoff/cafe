@@ -19,7 +19,7 @@ export const StoreSettings: GlobalConfig = {
           fields: [
             { name: 'storeName', type: 'text', defaultValue: 'Flavourite Cafe & Bakery', admin: { description: 'Store Name' } },
             { name: 'contactEmail', type: 'text', admin: { description: 'Customer support email' } },
-            { name: 'businessAddress', type: 'textarea', admin: { description: 'Bakery kitchen address' } },
+            { name: 'businessAddress', type: 'textarea', defaultValue: 'Main Road, Samalkot, Kakinada District, Andhra Pradesh - 533440', admin: { description: 'Bakery kitchen address' } },
             { 
               name: 'announcementBarText', 
               type: 'text', 
@@ -76,13 +76,13 @@ export const StoreSettings: GlobalConfig = {
               name: 'restrictPincodes',
               type: 'checkbox',
               defaultValue: true,
-              admin: { description: 'Restrict local bakery delivery to serviceable Hyderabad pincodes.' }
+              admin: { description: 'Restrict local bakery delivery to serviceable Samalkot & Kakinada region pincodes.' }
             },
             {
               name: 'serviceablePincodePrefixes',
               type: 'text',
-              defaultValue: '500',
-              admin: { description: 'Allowed pincode prefixes (e.g. 500 for Hyderabad & Secunderabad) or comma-separated list of pincodes.' }
+              defaultValue: '533',
+              admin: { description: 'Allowed pincode prefixes (e.g. 533 for Samalkot, Kakinada, Peddapuram & nearby) or comma-separated list of pincodes.' }
             },
             {
               name: 'sameDayCutoffHour',

@@ -54,7 +54,7 @@ export default function StorefrontLayout({ children }: { children: React.ReactNo
               </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 border-t border-white/20 pt-8 flex flex-col md:flex-row items-center justify-between text-xs opacity-60 gap-4">
-              <div>© 2026 Flavourite Food & Beverage. Handcrafted with ❤️ in Hyderabad.</div>
+              <div>© 2026 Flavourite Food & Beverage. Handcrafted with ❤️ in Samalkot, Andhra Pradesh.</div>
               <div className="flex gap-4">
                 <a href="/terms" className="hover:underline">Terms</a>
                 <a href="/privacy-policy" className="hover:underline">Privacy</a>

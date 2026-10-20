@@ -169,13 +169,13 @@ export const Orders: CollectionConfig = {
                 {
                   name: 'city',
                   type: 'text',
-                  defaultValue: 'Hyderabad',
+                  defaultValue: 'Samalkot',
                   admin: { width: '33%', description: 'City' },
                 },
                 {
                   name: 'state',
                   type: 'text',
-                  defaultValue: 'Telangana',
+                  defaultValue: 'Andhra Pradesh',
                   admin: { width: '33%', description: 'State' },
                 },
               ],
