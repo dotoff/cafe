@@ -8,7 +8,7 @@ import { RootLayout } from '@payloadcms/next/layouts'
 import React from 'react'
 
 import { serverFunction } from './serverFunction'
-import { ColorPicker } from '@/components/ColorPicker'
+import { importMap } from './admin/importMap'
 
 export const metadata: Metadata = {
   title: 'Flavourite Bakery Admin',
@@ -17,9 +17,7 @@ export const metadata: Metadata = {
 const Layout = ({ children }: { children: React.ReactNode }) => (
   <RootLayout 
     config={config} 
-    importMap={{
-      "@/components/ColorPicker#ColorPicker": ColorPicker
-    }}
+    importMap={importMap}
     serverFunction={serverFunction}
   >
     {children}

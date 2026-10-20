@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 
 import config from '@payload-config'
 import { RootPage, generatePageMetadata } from '@payloadcms/next/views'
+import { importMap } from '../importMap'
 
 type Args = {
   params: Promise<{
@@ -13,15 +14,13 @@ type Args = {
   }>
 }
 
-import { ColorPicker } from '@/components/ColorPicker'
-
 export const generateMetadata = ({ params, searchParams }: Args): Promise<Metadata> =>
   generatePageMetadata({ config, params, searchParams })
 
 const Page = ({ params, searchParams }: Args) =>
   RootPage({ 
     config, 
-    importMap: { "@/components/ColorPicker#ColorPicker": ColorPicker }, 
+    importMap, 
     params, 
     searchParams 
   })
