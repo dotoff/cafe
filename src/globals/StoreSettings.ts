@@ -2,8 +2,10 @@ import { GlobalConfig } from 'payload'
 
 export const StoreSettings: GlobalConfig = {
   slug: 'store-settings',
+  label: '⚙️ Store & Payment Settings',
   admin: {
-    group: 'Settings',
+    group: 'Storefront',
+    description: 'Configure store contact details, announcement bar, Razorpay keys, and Shiprocket credentials.',
   },
   access: {
     read: () => true,
@@ -13,81 +15,81 @@ export const StoreSettings: GlobalConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'General',
+          label: '🏪 Bakery Info & Announcement',
           fields: [
-            { name: 'storeName', type: 'text', defaultValue: 'Flavourite' },
-            { name: 'contactEmail', type: 'text' },
-            { name: 'businessAddress', type: 'textarea' },
+            { name: 'storeName', type: 'text', defaultValue: 'Flavourite Cafe & Bakery', admin: { description: 'Store Name' } },
+            { name: 'contactEmail', type: 'text', admin: { description: 'Customer support email' } },
+            { name: 'businessAddress', type: 'textarea', admin: { description: 'Bakery kitchen address' } },
             { 
               name: 'announcementBarText', 
               type: 'text', 
-              admin: { description: 'Text for the top banner (e.g. "Free shipping over ₹500!")' } 
+              admin: { description: 'Top announcement message (e.g. "🌿 100% Eggless Handcrafted Delights • Free Delivery over ₹500!")' } 
             },
-            { name: 'announcementBarActive', type: 'checkbox', defaultValue: false },
-          ]
+            { name: 'announcementBarActive', type: 'checkbox', defaultValue: true, admin: { description: 'Enable top announcement banner on storefront.' } },
+          ],
         },
         {
-          label: 'Checkout & Razorpay',
+          label: '💳 Payment & Delivery Charges',
           fields: [
             { 
               name: 'whatsappNumber', 
               type: 'text', 
               required: true,
               defaultValue: '917013205977', 
-              admin: { description: 'Store contact number (e.g. 917013205977)' } 
+              admin: { description: 'Bakery WhatsApp phone number with country code (e.g. 917013205977).' } 
             },
             {
               name: 'upiId',
               type: 'text',
               defaultValue: '7013205977@upi',
-              admin: { description: 'Optional store UPI ID.' }
+              admin: { description: 'Bakery UPI ID (e.g. 7013205977@upi).' }
             },
             {
               name: 'razorpayKeyId',
               type: 'text',
-              admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...). Paste here to activate Razorpay checkout.' }
+              admin: { description: 'Razorpay Key ID (rzp_live_... or rzp_test_...).' }
             },
             {
               name: 'razorpayKeySecret',
               type: 'text',
-              admin: { description: 'Razorpay Key Secret (found in Razorpay Dashboard -> Settings -> API Keys). Keep this confidential.' }
+              admin: { description: 'Razorpay Key Secret (found in Razorpay Dashboard -> Account & Settings -> API Keys).' }
             },
             { 
               name: 'taxRate', 
               type: 'number', 
               defaultValue: 5, 
-              admin: { description: 'GST/Tax percentage to add to the cart.' } 
+              admin: { description: 'GST percentage (e.g. 5 for 5%).' } 
             },
             { 
               name: 'shippingFlatRate', 
               type: 'number', 
               defaultValue: 50,
-              admin: { description: 'Standard shipping cost.' }
+              admin: { description: 'Standard flat delivery fee in ₹.' }
             },
             { 
               name: 'freeShippingThreshold', 
               type: 'number', 
               defaultValue: 500,
-              admin: { description: 'Cart subtotal required to get free shipping.' }
+              admin: { description: 'Minimum order amount in ₹ for free delivery (e.g. 500).' }
             },
-          ]
+          ],
         },
         {
-          label: 'Shiprocket Logistics',
+          label: '🚚 Shiprocket Logistics',
           fields: [
             {
               name: 'shiprocketAutoPush',
               type: 'checkbox',
               defaultValue: true,
               admin: {
-                description: 'Automatically push every paid order to Shiprocket immediately after Razorpay payment verification.',
+                description: 'Automatically push every paid order to Shiprocket immediately upon payment verification.',
               },
             },
             {
               name: 'shiprocketEmail',
               type: 'text',
               admin: {
-                description: 'Shiprocket API User Email (Create in Shiprocket Panel -> Settings -> API -> Add New API User).',
+                description: 'Shiprocket API User Email (from Shiprocket -> Settings -> API -> Add User).',
               },
             },
             {
@@ -102,7 +104,7 @@ export const StoreSettings: GlobalConfig = {
               type: 'text',
               defaultValue: 'Primary',
               admin: {
-                description: 'Exact name of your Pickup Location in Shiprocket (e.g. "Primary", "Home", "Bakery").',
+                description: 'Pickup Location name configured in your Shiprocket account.',
               },
             },
             {
@@ -110,19 +112,19 @@ export const StoreSettings: GlobalConfig = {
               type: 'number',
               defaultValue: 0.5,
               admin: {
-                description: 'Default package weight in Kilograms (e.g. 0.5 for 500g).',
+                description: 'Default package weight in kilograms (e.g. 0.5 for 500g).',
               },
             },
           ],
         },
         {
-          label: 'Social Media',
+          label: '📱 Social Links',
           fields: [
-            { name: 'instagramUrl', type: 'text' },
-            { name: 'facebookUrl', type: 'text' },
-          ]
-        }
-      ]
-    }
-  ]
+            { name: 'instagramUrl', type: 'text', admin: { description: 'Instagram profile URL' } },
+            { name: 'facebookUrl', type: 'text', admin: { description: 'Facebook page URL' } },
+          ],
+        },
+      ],
+    },
+  ],
 }

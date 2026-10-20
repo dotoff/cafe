@@ -2,10 +2,15 @@ import { CollectionConfig } from 'payload'
 
 export const Orders: CollectionConfig = {
   slug: 'orders',
+  labels: {
+    singular: '📦 Order',
+    plural: '📦 Orders & Deliveries',
+  },
   admin: {
+    group: 'Bakery Kitchen',
     useAsTitle: 'orderNumber',
-    defaultColumns: ['orderNumber', 'customerName', 'total', 'paymentStatus', 'orderStatus', 'createdAt'],
-    description: 'Track and manage incoming customer orders and fulfillment.',
+    defaultColumns: ['orderNumber', 'customerName', 'total', 'orderStatus', 'paymentStatus', 'createdAt'],
+    description: '📋 Track incoming bakery orders, update oven baking status, and organize delivery packing.',
   },
   access: {
     create: () => true, // Customers can submit orders via checkout API
@@ -32,16 +37,16 @@ export const Orders: CollectionConfig = {
           type: 'select',
           defaultValue: 'new',
           options: [
-            { label: '🆕 New Order', value: 'new' },
+            { label: '🆕 New Order (Received)', value: 'new' },
             { label: '✅ Confirmed', value: 'confirmed' },
-            { label: '🧁 Baking / Preparing', value: 'preparing' },
-            { label: '🛵 Out for Delivery', value: 'out_for_delivery' },
-            { label: '🎉 Delivered', value: 'delivered' },
+            { label: '🧁 In the Oven / Baking', value: 'preparing' },
+            { label: '🛵 Out for Delivery (Rider Dispatched)', value: 'out_for_delivery' },
+            { label: '🎉 Delivered Successfully', value: 'delivered' },
             { label: '❌ Cancelled', value: 'cancelled' },
           ],
           admin: {
             width: '50%',
-            description: 'Current order fulfillment status.',
+            description: '👉 Change status as you prepare and dispatch the order.',
           },
         },
         {
@@ -50,9 +55,9 @@ export const Orders: CollectionConfig = {
           defaultValue: 'pending',
           options: [
             { label: '⏳ Pending Payment', value: 'pending' },
-            { label: '📱 Paid (UPI / WhatsApp Verified)', value: 'paid_upi' },
             { label: '💳 Paid (Razorpay Online)', value: 'paid_razorpay' },
-            { label: '💵 Cash / Pay on Delivery', value: 'paid_cod' },
+            { label: '📱 Paid (UPI / WhatsApp)', value: 'paid_upi' },
+            { label: '💵 Cash on Delivery', value: 'paid_cod' },
             { label: '↩️ Refunded', value: 'refunded' },
           ],
           admin: {
@@ -66,7 +71,41 @@ export const Orders: CollectionConfig = {
       type: 'tabs',
       tabs: [
         {
-          label: 'Customer & Delivery',
+          label: '🍰 What to Bake & Pack',
+          description: 'Items ordered and special instructions for the kitchen.',
+          fields: [
+            {
+              name: 'specialInstructions',
+              type: 'textarea',
+              admin: {
+                description: '⚠️ Special cake messages, custom notes, or dietary preferences requested by the customer (e.g. "Write Happy Birthday Rohit", "Eggless only").',
+              },
+            },
+            {
+              name: 'items',
+              type: 'array',
+              required: true,
+              labels: {
+                singular: 'Item',
+                plural: 'Ordered Items',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    { name: 'name', type: 'text', required: true, admin: { width: '40%', description: 'Product' } },
+                    { name: 'variantName', type: 'text', admin: { width: '25%', description: 'Size / Flavour' } },
+                    { name: 'quantity', type: 'number', required: true, admin: { width: '15%', description: 'Qty' } },
+                    { name: 'price', type: 'number', required: true, admin: { width: '20%', description: 'Price (₹)' } },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+        {
+          label: '📍 Customer & Delivery',
+          description: 'Customer contact info, delivery address, date, and time slot.',
           fields: [
             {
               type: 'row',
@@ -75,53 +114,15 @@ export const Orders: CollectionConfig = {
                   name: 'customerName',
                   type: 'text',
                   required: true,
-                  admin: { width: '50%' },
+                  admin: { width: '50%', description: 'Customer Name' },
                 },
                 {
                   name: 'customerPhone',
                   type: 'text',
                   required: true,
-                  admin: { width: '50%' },
+                  admin: { width: '50%', description: 'Phone Number (for call or WhatsApp)' },
                 },
               ],
-            },
-            {
-              name: 'customerEmail',
-              type: 'email',
-              admin: { description: 'For sending invoice & order confirmation.' },
-            },
-            {
-              name: 'deliveryAddress',
-              type: 'textarea',
-              required: true,
-              admin: { description: 'Complete street address, apartment, flat/house number.' },
-            },
-            {
-              type: 'row',
-              fields: [
-                {
-                  name: 'landmark',
-                  type: 'text',
-                  admin: { width: '34%' },
-                },
-                {
-                  name: 'city',
-                  type: 'text',
-                  defaultValue: 'Hyderabad',
-                  admin: { width: '33%' },
-                },
-                {
-                  name: 'state',
-                  type: 'text',
-                  defaultValue: 'Telangana',
-                  admin: { width: '33%' },
-                },
-              ],
-            },
-            {
-              name: 'pincode',
-              type: 'text',
-              required: true,
             },
             {
               type: 'row',
@@ -131,7 +132,7 @@ export const Orders: CollectionConfig = {
                   type: 'date',
                   admin: {
                     width: '50%',
-                    description: 'Preferred delivery date requested by the customer.',
+                    description: '📅 Requested Delivery Date',
                   },
                 },
                 {
@@ -146,46 +147,63 @@ export const Orders: CollectionConfig = {
                   defaultValue: 'asap',
                   admin: {
                     width: '50%',
-                    description: 'Preferred delivery time slot.',
+                    description: '⏰ Requested Time Slot',
                   },
                 },
               ],
             },
             {
-              name: 'specialInstructions',
+              name: 'deliveryAddress',
               type: 'textarea',
-              admin: {
-                description: 'Special requests (e.g. "Eggless only", "Write Happy Birthday Rohit on cake", "Call before arriving").',
-              },
-            },
-          ],
-        },
-        {
-          label: 'Order Items & Payment',
-          fields: [
-            {
-              name: 'items',
-              type: 'array',
               required: true,
-              fields: [
-                {
-                  type: 'row',
-                  fields: [
-                    { name: 'name', type: 'text', required: true, admin: { width: '35%' } },
-                    { name: 'variantName', type: 'text', admin: { width: '25%' } },
-                    { name: 'price', type: 'number', required: true, admin: { width: '20%' } },
-                    { name: 'quantity', type: 'number', required: true, admin: { width: '20%' } },
-                  ],
-                },
-              ],
+              admin: { description: 'Complete street address, apartment / flat number' },
             },
             {
               type: 'row',
               fields: [
-                { name: 'subtotal', type: 'number', required: true, admin: { width: '25%' } },
-                { name: 'tax', type: 'number', defaultValue: 0, admin: { width: '25%' } },
-                { name: 'shipping', type: 'number', defaultValue: 0, admin: { width: '25%' } },
-                { name: 'total', type: 'number', required: true, admin: { width: '25%' } },
+                {
+                  name: 'landmark',
+                  type: 'text',
+                  admin: { width: '34%', description: 'Landmark' },
+                },
+                {
+                  name: 'city',
+                  type: 'text',
+                  defaultValue: 'Hyderabad',
+                  admin: { width: '33%', description: 'City' },
+                },
+                {
+                  name: 'state',
+                  type: 'text',
+                  defaultValue: 'Telangana',
+                  admin: { width: '33%', description: 'State' },
+                },
+              ],
+            },
+            {
+              name: 'pincode',
+              type: 'text',
+              required: true,
+              admin: { description: 'Pincode (6 digits)' },
+            },
+            {
+              name: 'customerEmail',
+              type: 'email',
+              admin: { description: 'Customer Email (for automated invoice & updates)' },
+            },
+          ],
+        },
+        {
+          label: '💰 Billing & Payment',
+          description: 'Payment breakdown and transaction references.',
+          fields: [
+            {
+              type: 'row',
+              fields: [
+                { name: 'subtotal', type: 'number', required: true, admin: { width: '25%', description: 'Subtotal (₹)' } },
+                { name: 'tax', type: 'number', defaultValue: 0, admin: { width: '25%', description: 'GST (₹)' } },
+                { name: 'shipping', type: 'number', defaultValue: 0, admin: { width: '25%', description: 'Delivery (₹)' } },
+                { name: 'total', type: 'number', required: true, admin: { width: '25%', description: 'Grand Total (₹)' } },
               ],
             },
             {
@@ -193,51 +211,38 @@ export const Orders: CollectionConfig = {
               type: 'select',
               defaultValue: 'razorpay',
               options: [
-                { label: 'Razorpay (Cards/UPI/Netbanking)', value: 'razorpay' },
-                { label: 'UPI / WhatsApp Pay', value: 'upi_whatsapp' },
+                { label: 'Razorpay Online (UPI/Cards/Netbanking)', value: 'razorpay' },
                 { label: 'Cash on Delivery', value: 'cod' },
+                { label: 'Direct UPI / WhatsApp', value: 'upi_whatsapp' },
               ],
             },
-            {
-              name: 'razorpayOrderId',
-              type: 'text',
-              admin: {
-                description: 'Razorpay Order ID when payment is processed via Razorpay.',
-              },
-            },
-            {
-              name: 'razorpayPaymentId',
-              type: 'text',
-              admin: {
-                description: 'Razorpay Payment ID receipt.',
-              },
-            },
-          ],
-        },
-        {
-          label: 'Shiprocket & Courier',
-          fields: [
             {
               type: 'row',
               fields: [
                 {
-                  name: 'shiprocketOrderId',
+                  name: 'razorpayOrderId',
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Shiprocket Order ID (auto-populated when synced).',
+                    description: 'Razorpay Order ID',
                   },
                 },
                 {
-                  name: 'shiprocketShipmentId',
+                  name: 'razorpayPaymentId',
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Shiprocket Shipment ID.',
+                    description: 'Razorpay Payment Receipt ID',
                   },
                 },
               ],
             },
+          ],
+        },
+        {
+          label: '🚚 Courier & Shiprocket',
+          description: 'Shiprocket logistics and live AWB tracking info.',
+          fields: [
             {
               type: 'row',
               fields: [
@@ -246,7 +251,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Assigned Courier Partner (e.g. BlueDart, Delhivery, Shadowfax).',
+                    description: 'Assigned Courier (e.g. BlueDart, Delhivery, Dunzo, Shadowfax)',
                   },
                 },
                 {
@@ -254,7 +259,7 @@ export const Orders: CollectionConfig = {
                   type: 'text',
                   admin: {
                     width: '50%',
-                    description: 'Courier AWB Tracking Code.',
+                    description: 'Courier Tracking / AWB Code',
                   },
                 },
               ],
@@ -263,26 +268,49 @@ export const Orders: CollectionConfig = {
               name: 'trackingUrl',
               type: 'text',
               admin: {
-                description: 'Live courier tracking link shown to the customer on the Track Order page.',
+                description: 'Live Courier Tracking Link',
               },
             },
             {
-              name: 'shiprocketStatus',
-              type: 'text',
-              admin: {
-                description: 'Latest Shiprocket sync status or shipment milestone.',
-              },
+              type: 'row',
+              fields: [
+                {
+                  name: 'shiprocketOrderId',
+                  type: 'text',
+                  admin: {
+                    width: '33%',
+                    description: 'Shiprocket Order ID',
+                  },
+                },
+                {
+                  name: 'shiprocketShipmentId',
+                  type: 'text',
+                  admin: {
+                    width: '33%',
+                    description: 'Shipment ID',
+                  },
+                },
+                {
+                  name: 'shiprocketStatus',
+                  type: 'text',
+                  admin: {
+                    width: '34%',
+                    description: 'Courier Sync Status',
+                  },
+                },
+              ],
             },
           ],
         },
         {
-          label: 'Internal Notes',
+          label: '📝 Kitchen Notes',
+          description: 'Private bakery notes and reminders.',
           fields: [
             {
               name: 'adminNotes',
               type: 'textarea',
               admin: {
-                description: 'Private kitchen/delivery notes (e.g. "Sent via Dunzo #9283", "Customer requested 5pm delivery").',
+                description: 'Private kitchen reminders (e.g. "Sent with Dunzo runner Suresh", "Customer called to request 4pm delivery").',
               },
             },
           ],

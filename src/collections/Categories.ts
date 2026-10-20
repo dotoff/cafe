@@ -2,12 +2,17 @@ import { CollectionConfig } from 'payload'
 
 export const Categories: CollectionConfig = {
   slug: 'categories',
+  labels: {
+    singular: '🏷️ Category',
+    plural: '🏷️ Menu Categories',
+  },
   admin: {
+    group: 'Bakery Kitchen',
     useAsTitle: 'title',
-    description: 'Manage your product categories (e.g. Chocolates, Hampers)',
+    description: 'Organize your bakery treats into categories (e.g. Cakes, Chocolates, Cookies, Hampers).',
     livePreview: {
       url: ({ data }) => `http://localhost:3000/shop?category=${data.slug || ''}`,
-    }
+    },
   },
   access: {
     read: () => true,
@@ -18,8 +23,8 @@ export const Categories: CollectionConfig = {
       type: 'text',
       required: true,
       admin: {
-        description: 'The name of the category as it will appear on the website.',
-      }
+        description: 'Category name (e.g. Chocolates, Cakes, Gift Hampers)',
+      },
     },
     {
       name: 'slug',
@@ -27,26 +32,26 @@ export const Categories: CollectionConfig = {
       required: true,
       unique: true,
       admin: {
-        description: 'The URL-friendly version of the name (e.g., "gift-hampers"). No spaces allowed.',
-      }
+        description: 'URL key for filtering (e.g. "chocolates", "hampers"). No spaces.',
+      },
     },
     {
       name: 'emoji',
       type: 'text',
       admin: {
-        description: 'Paste a single emoji to represent this category (e.g. 🍫, 🍪, 🎁). On Windows, press the [Windows Key] + [.] to open the emoji picker.',
-      }
+        description: 'A single emoji to show on the website (e.g. 🍫, 🎂, 🍪, 🎁). On Windows, press [Windows Key] + [.] to open emoji picker.',
+      },
     },
     {
       name: 'colorTheme',
       type: 'text',
       defaultValue: '#5D4037',
       admin: {
-        description: 'Choose a beautiful background color for this category card.',
+        description: 'Choose a background color for this category card.',
         components: {
           Field: '@/components/ColorPicker#ColorPicker',
-        }
-      }
+        },
+      },
     },
   ],
 }

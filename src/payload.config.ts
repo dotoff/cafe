@@ -37,6 +37,9 @@ if (process.env.VERCEL && (!process.env.DATABASE_URI || process.env.DATABASE_URI
 export default buildConfig({
   admin: {
     user: Users.slug,
+    meta: {
+      titleSuffix: '• Flavourite Bakery Admin',
+    },
     livePreview: {
       url: 'http://localhost:3000',
       collections: ['banners', 'categories', 'products'],

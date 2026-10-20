@@ -2,9 +2,14 @@ import { CollectionConfig } from 'payload'
 
 export const Banners: CollectionConfig = {
   slug: 'banners',
+  labels: {
+    singular: '🖼️ Hero Banner',
+    plural: '🖼️ Homepage Banners',
+  },
   admin: {
+    group: 'Storefront',
     useAsTitle: 'title',
-    description: 'Manage the large promotional banners on the homepage.',
+    description: 'Promotional banners and announcements featured at the top of the homepage carousel.',
   },
   access: {
     read: () => true,
@@ -15,56 +20,63 @@ export const Banners: CollectionConfig = {
       type: 'text',
       required: true,
       admin: {
-        description: 'Main headline for the banner.',
-      }
+        description: 'Main headline for the banner (e.g. "Diwali Special Handcrafted Hampers").',
+      },
     },
     {
       name: 'description',
       type: 'textarea',
       admin: {
-        description: 'A short paragraph describing the offer or highlight.',
-      }
+        description: 'Short promotional offer or highlight subtitle.',
+      },
     },
     {
-      name: 'buttonText',
-      type: 'text',
-      admin: {
-        description: 'Text for the clickable button (e.g., "Shop Now").',
-      }
-    },
-    {
-      name: 'buttonLink',
-      type: 'text',
-      admin: {
-        description: 'Where the button should take the user (e.g., "/shop?category=hampers").',
-      }
+      type: 'row',
+      fields: [
+        {
+          name: 'buttonText',
+          type: 'text',
+          admin: {
+            width: '50%',
+            description: 'Button text (e.g. "Shop Hampers", "Explore Cakes").',
+          },
+        },
+        {
+          name: 'buttonLink',
+          type: 'text',
+          admin: {
+            width: '50%',
+            description: 'Link destination (e.g. "/shop?category=hampers").',
+          },
+        },
+      ],
     },
     {
       name: 'image',
       type: 'upload',
       relationTo: 'media',
       admin: {
-        description: 'Upload a beautiful, high-quality image for the banner.',
-      }
+        description: 'Upload banner background photo.',
+      },
     },
     {
       name: 'colorTheme',
       type: 'text',
       defaultValue: '#FDFBF7',
       admin: {
-        description: 'Select the background color theme for this banner section.',
+        description: 'Section theme background color.',
         components: {
           Field: '@/components/ColorPicker#ColorPicker',
-        }
-      }
+        },
+      },
     },
     {
       name: 'isActive',
       type: 'checkbox',
       defaultValue: true,
       admin: {
-        description: 'Check this box to show this banner on the live website.',
-      }
+        description: 'Show this banner on the live website.',
+      },
     },
   ],
 }
