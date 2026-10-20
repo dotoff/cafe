@@ -40,6 +40,9 @@ export default buildConfig({
     meta: {
       titleSuffix: '• Flavourite Bakery Admin',
     },
+    components: {
+      beforeDashboard: ['@/components/admin/BakeryDashboard#BakeryDashboard'],
+    },
     livePreview: {
       url: 'http://localhost:3000',
       collections: ['banners', 'categories', 'products'],
