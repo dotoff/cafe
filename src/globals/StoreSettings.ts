@@ -18,14 +18,78 @@ export const StoreSettings: GlobalConfig = {
           label: '🏪 Bakery Info & Announcement',
           fields: [
             { name: 'storeName', type: 'text', defaultValue: 'Flavourite Cafe & Bakery', admin: { description: 'Store Name' } },
-            { name: 'contactEmail', type: 'text', admin: { description: 'Customer support email' } },
+            { name: 'contactEmail', type: 'text', defaultValue: 'flavouritefood@gmail.com', admin: { description: 'Customer support email' } },
+            { name: 'phoneSupport', type: 'text', defaultValue: '+91 70132 05977', admin: { description: 'Support phone number displayed in header/footer.' } },
+            { name: 'fssaiNumber', type: 'text', admin: { description: 'FSSAI Food License / Registration Number (e.g. 1012XXXXXXXXXX). Displayed in footer for legal food safety compliance.' } },
             { name: 'businessAddress', type: 'textarea', defaultValue: 'Main Road, Samalkot, Kakinada District, Andhra Pradesh - 533440', admin: { description: 'Bakery kitchen address' } },
             { 
               name: 'announcementBarText', 
               type: 'text', 
-              admin: { description: 'Top announcement message (e.g. "🌿 100% Eggless Handcrafted Delights • Free Delivery over ₹500!")' } 
+              defaultValue: '🌿 100% Vegetarian Artisanal Goodies • Handcrafted in Samalkot • Pan-India Courier Available!',
+              admin: { description: 'Top announcement message displayed on the very top bar of the storefront.' } 
             },
             { name: 'announcementBarActive', type: 'checkbox', defaultValue: true, admin: { description: 'Enable top announcement banner on storefront.' } },
+          ],
+        },
+        {
+          label: '🧭 Header Navigation Bar',
+          fields: [
+            {
+              name: 'headerNav',
+              type: 'array',
+              label: 'Menu Links',
+              labels: {
+                singular: 'Menu Link',
+                plural: 'Menu Links',
+              },
+              admin: {
+                description: 'Manage the top menu tabs. Mom can drag to re-order, rename, or add category links (e.g. Chocolates, Hampers, Brownies, Festive Specials). Leave empty to use standard defaults.',
+              },
+              fields: [
+                {
+                  type: 'row',
+                  fields: [
+                    {
+                      name: 'label',
+                      type: 'text',
+                      required: true,
+                      label: 'Menu Label',
+                      admin: {
+                        width: '40%',
+                        description: 'e.g. Chocolates, Gift Hampers, Brownies, Bestsellers',
+                      },
+                    },
+                    {
+                      name: 'link',
+                      type: 'text',
+                      required: true,
+                      label: 'Link / Destination',
+                      admin: {
+                        width: '40%',
+                        description: 'e.g. /shop?category=chocolates, /shop, /about, /track-order',
+                      },
+                    },
+                    {
+                      name: 'isActive',
+                      type: 'checkbox',
+                      defaultValue: true,
+                      label: 'Show in Menu',
+                      admin: {
+                        width: '20%',
+                      },
+                    },
+                  ],
+                },
+                {
+                  name: 'badge',
+                  type: 'text',
+                  label: 'Optional Highlight Badge',
+                  admin: {
+                    description: 'Small highlight tag next to text (e.g. "New", "Hot", "Festive", "Diwali")',
+                  },
+                },
+              ],
+            },
           ],
         },
         {
