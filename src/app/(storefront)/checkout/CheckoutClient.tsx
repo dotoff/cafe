@@ -1,10 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useCartStore } from '@/store/cart'
 import Link from 'next/link'
-import { ArrowLeft, ShieldCheck, Lock, ShoppingBag, CheckCircle, CreditCard, Smartphone } from 'lucide-react'
+import { ArrowLeft, ShieldCheck, Lock, ShoppingBag, CheckCircle, CreditCard, Smartphone, MapPin, Plus } from 'lucide-react'
 
 export default function CheckoutClient({ settings }: { settings: any }) {
   const router = useRouter()
@@ -13,6 +13,11 @@ export default function CheckoutClient({ settings }: { settings: any }) {
   const [loading, setLoading] = useState(false)
   const [redirecting, setRedirecting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+
+  // Customer session & saved addresses
+  const [customer, setCustomer] = useState<any>(null)
+  const [selectedAddressId, setSelectedAddressId] = useState<string | null>(null)
+  const [saveAddressToAccount, setSaveAddressToAccount] = useState(true)
 
   const [formData, setFormData] = useState({
     customerName: '',
@@ -28,6 +33,42 @@ export default function CheckoutClient({ settings }: { settings: any }) {
     specialInstructions: '',
     paymentMethod: 'razorpay',
   })
+
+  // Load customer profile and saved addresses if logged in
+  useEffect(() => {
+    fetch('/api/auth/me')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.authenticated && data.customer) {
+          setCustomer(data.customer)
+          setFormData((prev) => ({
+            ...prev,
+            customerName: prev.customerName || data.customer.name || '',
+            customerPhone: prev.customerPhone || data.customer.phone || '',
+            customerEmail: prev.customerEmail || data.customer.email || '',
+          }))
+          const addrs = data.customer.addresses || []
+          const defAddr = addrs.find((a: any) => a.isDefault) || addrs[0]
+          if (defAddr) {
+            selectSavedAddress(defAddr)
+          }
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const selectSavedAddress = (addr: any) => {
+    setSelectedAddressId(addr.id)
+    setFormData((prev) => ({
+      ...prev,
+      customerName: addr.recipientName || prev.customerName,
+      customerPhone: addr.phone || prev.customerPhone,
+      deliveryAddress: addr.addressLine1 || '',
+      landmark: addr.landmark || '',
+      pincode: addr.pincode || '',
+      city: addr.city || 'Samalkot',
+    }))
+  }
 
   const subtotal = getTotal()
   const taxRate = settings?.taxRate ?? 5
@@ -171,6 +212,26 @@ export default function CheckoutClient({ settings }: { settings: any }) {
               }
             }
 
+            // Save new address to customer account if requested
+            if (customer && saveAddressToAccount && !selectedAddressId) {
+              try {
+                fetch('/api/customer/address', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    label: 'Home',
+                    recipientName: formData.customerName,
+                    phone: formData.customerPhone,
+                    addressLine1: formData.deliveryAddress,
+                    landmark: formData.landmark,
+                    pincode: formData.pincode,
+                    city: formData.city,
+                    isDefault: false,
+                  }),
+                }).catch(() => {})
+              } catch (e) {}
+            }
+
             clearCart()
             router.push(`/order-success?orderId=${encodeURIComponent(verifyData.orderNumber)}`)
           } catch (verifyErr: any) {
@@ -269,6 +330,84 @@ export default function CheckoutClient({ settings }: { settings: any }) {
           {/* Left Form: Details */}
           <div className="lg:col-span-7 space-y-6">
             
+            {/* Guest Banner vs Logged-In User Banner */}
+            {!customer ? (
+              <div className="bg-emerald-50 border border-emerald-200/80 p-4 rounded-2xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-emerald-950">
+                <div className="flex items-center gap-2.5">
+                  <span className="text-xl">👋</span>
+                  <div>
+                    <span className="font-bold text-emerald-900 block sm:inline">Have an account? </span>
+                    <span className="text-emerald-800">Log in with your Phone OTP to auto-fill saved addresses!</span>
+                  </div>
+                </div>
+                <Link
+                  href="/login?redirect=/checkout"
+                  className="bg-brand-dark hover:bg-brand-medium text-white font-semibold px-4 py-2 rounded-xl text-center transition-colors shrink-0 shadow-sm"
+                >
+                  Log In with OTP →
+                </Link>
+              </div>
+            ) : (
+              customer.addresses && customer.addresses.length > 0 && (
+                <div className="bg-white border border-gray-100 p-6 rounded-3xl shadow-sm space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-sm font-bold text-gray-900 flex items-center gap-2">
+                      <MapPin size={16} className="text-brand-dark" />
+                      <span>Deliver to Saved Address</span>
+                    </h3>
+                    <span className="text-xs text-gray-400">Logged in (+91 {customer.phone})</span>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {customer.addresses.map((addr: any) => (
+                      <div
+                        key={addr.id}
+                        onClick={() => selectSavedAddress(addr)}
+                        className={`p-3.5 rounded-2xl border-2 transition-all cursor-pointer text-xs ${
+                          selectedAddressId === addr.id
+                            ? 'border-brand-dark bg-emerald-50/40 shadow-xs'
+                            : 'border-gray-100 bg-gray-50/50 hover:border-gray-200'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-1">
+                          <span className="font-bold text-gray-900 flex items-center gap-1">
+                            {addr.label === 'Home' && '🏠 Home'}
+                            {addr.label === 'Work' && '🏢 Work'}
+                            {addr.label === 'Other' && '📍 Other'}
+                            {!['Home', 'Work', 'Other'].includes(addr.label) && addr.label}
+                          </span>
+                          {selectedAddressId === addr.id && (
+                            <CheckCircle size={14} className="text-brand-dark" />
+                          )}
+                        </div>
+                        <p className="font-semibold text-gray-800">{addr.recipientName}</p>
+                        <p className="text-gray-500 line-clamp-1">{addr.addressLine1}</p>
+                        <p className="text-gray-700 font-mono mt-1">{addr.city} - {addr.pincode}</p>
+                      </div>
+                    ))}
+                    <div
+                      onClick={() => {
+                        setSelectedAddressId(null)
+                        setFormData((prev) => ({
+                          ...prev,
+                          deliveryAddress: '',
+                          landmark: '',
+                          pincode: '',
+                        }))
+                      }}
+                      className={`p-3.5 rounded-2xl border-2 border-dashed transition-all cursor-pointer text-xs flex items-center justify-center gap-2 text-center ${
+                        selectedAddressId === null
+                          ? 'border-brand-dark bg-emerald-50/20 text-brand-dark font-bold'
+                          : 'border-gray-200 text-gray-500 hover:border-gray-300'
+                      }`}
+                    >
+                      <Plus size={16} />
+                      <span>+ Enter New Address</span>
+                    </div>
+                  </div>
+                </div>
+              )
+            )}
+
             {/* 1. Contact Information */}
             <div className="bg-white border border-gray-100 p-6 md:p-8 rounded-3xl shadow-sm">
               <h2 className="text-xl font-serif text-brand-dark mb-4 flex items-center gap-2">
@@ -450,6 +589,18 @@ export default function CheckoutClient({ settings }: { settings: any }) {
                     </select>
                   </div>
                 </div>
+
+                {customer && !selectedAddressId && (
+                  <label className="flex items-center gap-2 text-xs text-gray-700 cursor-pointer pt-2">
+                    <input
+                      type="checkbox"
+                      checked={saveAddressToAccount}
+                      onChange={(e) => setSaveAddressToAccount(e.target.checked)}
+                      className="rounded border-gray-300 text-brand-dark focus:ring-brand-dark"
+                    />
+                    <span>Save this new address to my account for future orders</span>
+                  </label>
+                )}
 
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1">

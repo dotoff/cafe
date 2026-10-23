@@ -5,6 +5,7 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 
 import { Users } from './collections/Users'
+import { Customers } from './collections/Customers'
 import { Media } from './collections/Media'
 import { Categories } from './collections/Categories'
 import { Products } from './collections/Products'
@@ -54,7 +55,7 @@ export default buildConfig({
       ],
     },
   },
-  collections: [Users, Media, Categories, Products, Banners, Orders],
+  collections: [Users, Customers, Media, Categories, Products, Banners, Orders],
   globals: [StoreSettings],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || 'secret-key-for-local-dev-flavourite-cafe-2026',
